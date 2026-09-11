@@ -1,0 +1,18 @@
+caseId: L2-03
+level: L2
+title: Propagate optional coupon field through service
+labels:
+  localization: 1
+  modificationSpan: 3
+  acceptance: 2
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 420
+  maxModelCalls: 60
+  maxToolCalls: 90
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

@@ -1,0 +1,8 @@
+Add a `--verbose` flag end to end to the bundled mini CLI:
+
+- parse it in `cli.py`,
+- thread it through `config.py` into `report.py`,
+- emit one `verbose: <step>` line per report step when the flag is enabled.
+
+Without the flag the CLI output must stay exactly the JSON report it prints today. Change only
+`cli.py`, `config.py` and `report.py`; existing tests may not be modified.

@@ -1,0 +1,8 @@
+Add a validated `max_retries` parameter (0..5, default 3) to the `send_notification` tool:
+
+- `tool_definition.py`: declare the parameter, its bounds and its default,
+- `validator.py`: enforce the bounds and apply the default,
+- `adapter_dto.py`: serialize the parameter consistently,
+- `runtime_binding.py`: forward it to the handler.
+
+Change only those four files; existing tests may not be modified.

@@ -1,0 +1,5 @@
+`metrics.py` computes the conversion rate with integer division, so 2 of 3 renders as 0%.
+The report renderer already formats the returned ratio.
+
+Fix the calculation so it returns the ratio rounded to two decimals, keep the existing
+callers working, and change only `metrics.py`. Existing tests must not be modified.

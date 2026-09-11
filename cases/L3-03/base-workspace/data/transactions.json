@@ -1,0 +1,7 @@
+[
+  {"account": "a", "amount": 3, "booked_at": "2026-02-10 12:00:00"},
+  {"account": "a", "amount": 4, "booked_at": "2026-02-10 23:59:59"},
+  {"account": "b", "amount": 5, "booked_at": "2026-02-11 00:00:00"},
+  {"account": "b", "amount": 6, "booked_at": "2026-02-11 08:00:00"},
+  {"account": "c", "amount": 7, "booked_at": "2026-02-12 00:00:00"}
+]

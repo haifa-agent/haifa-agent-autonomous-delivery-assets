@@ -1,0 +1,5 @@
+Symptom: in the bundled mini-project, values from `settings.ini` are silently ignored whenever the
+project path contains a backslash; the very same configuration loads fine on Linux.
+
+No file paths are given. Locate the root cause and fix it with a minimal change; the visible suite
+plus hidden configuration cases must pass and the existing tests may not be modified.

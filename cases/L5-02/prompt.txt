@@ -1,0 +1,9 @@
+Reduce the duplicate-detection cost of `deduplicate` in the bundled mini-project: the acceptance run
+must finish inside its time budget while the returned order and values stay identical.
+
+Hard constraints (acceptance inspects the diff):
+
+- only the Python standard library may be used: no third-party dependency and no new module or file,
+- edits only inside the existing dedup module.
+
+Existing tests may not be modified.

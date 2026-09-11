@@ -1,0 +1,9 @@
+Introduce a `CANCELLED` order status in the bundled mini-project:
+
+- add the status to `models.py`,
+- allow cancelling orders that are `NEW` or `PAID` and reject any transition into `CANCELLED`
+  from `FINISHED` in `state_machine.py`,
+- render the new status in the summary renderer `views.py`.
+
+Change only those three files; existing tests may not be modified. Acceptance checks the new
+transitions, the terminal behaviour of `CANCELLED`, and the rendering.

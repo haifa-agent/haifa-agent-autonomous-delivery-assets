@@ -1,0 +1,5 @@
+[
+  {"status": "RUNNING", "progress": 0.25},
+  {"status": "COMPLETED", "progress": 1.0},
+  {"status": "FAILED", "progress": 0.5}
+]

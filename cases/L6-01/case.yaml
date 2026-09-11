@@ -1,0 +1,18 @@
+caseId: L6-01
+level: L6
+title: "Open issue: bulk inventory import from CSV"
+labels:
+  localization: 3
+  modificationSpan: 5
+  acceptance: 4
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 900
+  maxModelCalls: 90
+  maxToolCalls: 160
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

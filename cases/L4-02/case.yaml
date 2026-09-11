@@ -1,0 +1,18 @@
+caseId: L4-02
+level: L4
+title: Introduce new event type through pipeline
+labels:
+  localization: 2
+  modificationSpan: 4
+  acceptance: 3
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 480
+  maxModelCalls: 70
+  maxToolCalls: 110
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

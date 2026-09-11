@@ -1,0 +1,10 @@
+Add a `page_size` request parameter to the bundled listing so callers can request between 1 and 100
+records; the default must stay 20.
+
+Implementation notes:
+
+- `listing.py` exposes the public `list_records(page_size=20)` entry point,
+- `repository.py` performs the range validation and slicing.
+
+Preserve the existing default listing order and element shape. Change only `listing.py` and
+`repository.py`; existing tests may not be modified.

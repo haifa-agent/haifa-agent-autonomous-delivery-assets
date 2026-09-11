@@ -1,0 +1,10 @@
+Rename the poorly named `calc(x, y)` entry point of the bundled mini-project to
+`calculate(total, discount)` with identical behaviour, while keeping `calc` working unchanged for
+existing callers.
+
+Hard constraints (acceptance inspects the diff):
+
+- `calc` must stay a working alias that delegates to `calculate`, not a copy-paste duplicate,
+- edits only inside the existing pricing module, no new file.
+
+Existing tests may not be modified.

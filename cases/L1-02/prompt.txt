@@ -1,0 +1,7 @@
+The bundled mini-project computes month lengths in `dates.py`.
+
+Year 2000 must be a leap year while 1900 must not. The provided unit test captures the
+rule; make the whole test suite pass.
+
+Change only `dates.py` and do not modify the existing tests. Acceptance runs the visible
+suite plus hidden century-rule and month-length cases.

@@ -1,0 +1,18 @@
+caseId: L1-03
+level: L1
+title: Recover slugify edge cases from a red suite
+labels:
+  localization: 2
+  modificationSpan: 1
+  acceptance: 2
+variants: [ERROR_RECOVERY]
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 300
+  maxModelCalls: 40
+  maxToolCalls: 60
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

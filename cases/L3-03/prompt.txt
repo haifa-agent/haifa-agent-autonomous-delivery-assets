@@ -1,0 +1,5 @@
+Symptom: the nightly aggregation in the bundled mini-project sometimes counts the same transaction
+twice around midnight, so the two neighbouring nights do not add up to the total.
+
+Diagnose the boundary condition from the symptom, the sample data and the visible suite, then fix it
+with the smallest change. Change only `aggregate.py`; existing tests may not be modified.

@@ -1,0 +1,9 @@
+Extend the job status API of the bundled mini-project with a machine-readable `reason_code`:
+
+- `status_service.py`: carry the optional reason code,
+- `adapter_dto.py`: map it to the wire key `reasonCode`,
+- `status_api.py`: expose it as an optional argument of `job_status`.
+
+Responses of the previous version must stay compatible for old consumers: keeping the existing keys,
+values and types intact. Change only `status_service.py`, `adapter_dto.py` and `status_api.py`;
+existing tests, the recorded contract and other files may not be modified.

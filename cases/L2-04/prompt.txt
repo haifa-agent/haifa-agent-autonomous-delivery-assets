@@ -1,0 +1,8 @@
+The report exporter currently writes JSON only. Add CSV export beside it:
+
+- register a `csv` format in `exporters.py`,
+- implement `csv_exporter.py` (header from the first row's keys, rows in input order),
+- wire `--format <name>` in `cli.py`.
+
+Existing JSON export must keep identical output. Change only `exporters.py`, `csv_exporter.py` and
+`cli.py`; existing tests may not be modified.

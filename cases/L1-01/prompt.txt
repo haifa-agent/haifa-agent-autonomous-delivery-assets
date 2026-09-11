@@ -1,0 +1,7 @@
+The bundled mini-project paginates result windows in `pagination.py`.
+
+`PageWindow.slice(items, page, size)` returns one item too many when the last page is
+partially filled. A failing unit test is included in the workspace.
+
+Make the whole test suite pass and change only `pagination.py`. Do not modify the
+existing tests; acceptance verifies both the visible suite and hidden boundary cases.

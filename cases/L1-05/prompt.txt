@@ -1,0 +1,5 @@
+The product spec requires case-insensitive matching for ASCII input, but `search.py` compares
+records case-sensitively.
+
+Update the single comparison point in `matches(query, records)` so the provided tests pass.
+Change only `search.py`; do not modify the existing tests.

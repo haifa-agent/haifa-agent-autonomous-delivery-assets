@@ -1,0 +1,10 @@
+Introduce a `JOB_RETRYING` event type through the event pipeline of the bundled mini-project:
+
+- extend the event enum in `events.py`,
+- make sure the dispatcher accepts it,
+- include it in the JSONL projection in `projection.py`,
+- keep the public pipeline entry point in `pipeline.py` working.
+
+An emitted `JOB_RETRYING` event must be dispatched and appear in the projection. Existing event
+types and the rejection of unknown types must not change. Change only `events.py`, `dispatcher.py`,
+`projection.py` and `pipeline.py`; existing tests may not be modified.

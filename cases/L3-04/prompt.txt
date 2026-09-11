@@ -1,0 +1,6 @@
+Symptom: importing more than a few thousand rows makes the batch importer appear to hang while the
+CPU stays busy. Small imports still return the correct rows.
+
+Identify the algorithmic cause and fix it so a large import completes inside the acceptance time
+budget without changing the import results or the order of the imported rows. Change only
+`importer.py`; existing tests may not be modified.

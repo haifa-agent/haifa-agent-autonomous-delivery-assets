@@ -1,0 +1,18 @@
+caseId: L1-04
+level: L1
+title: Fix integer division in conversion rate
+labels:
+  localization: 1
+  modificationSpan: 1
+  acceptance: 1
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 300
+  maxModelCalls: 40
+  maxToolCalls: 60
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

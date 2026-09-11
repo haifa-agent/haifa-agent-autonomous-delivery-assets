@@ -1,0 +1,18 @@
+caseId: L5-01
+level: L5
+title: Validate emails without new public types
+labels:
+  localization: 2
+  modificationSpan: 2
+  acceptance: 4
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 480
+  maxModelCalls: 70
+  maxToolCalls: 110
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

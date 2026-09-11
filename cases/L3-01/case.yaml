@@ -1,0 +1,18 @@
+caseId: L3-01
+level: L3
+title: Diagnose settings ignored on Windows paths
+labels:
+  localization: 4
+  modificationSpan: 1
+  acceptance: 1
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 420
+  maxModelCalls: 60
+  maxToolCalls: 90
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

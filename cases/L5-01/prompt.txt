@@ -1,0 +1,10 @@
+Add email format validation to the user registration helper in the bundled mini-project: a malformed
+address must be rejected with `ValueError`, a valid one must be stored exactly as today.
+
+Hard constraints (acceptance inspects the diff):
+
+- no new public types and no new public top-level functions,
+- no new modules or files,
+- edits only inside the existing registration module.
+
+Existing tests may not be modified.

@@ -1,0 +1,18 @@
+caseId: L6-02
+level: L6
+title: "Open issue: resumable batch export"
+labels:
+  localization: 4
+  modificationSpan: 5
+  acceptance: 5
+variants: []
+language: JAVA
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 900
+  maxModelCalls: 90
+  maxToolCalls: 160
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

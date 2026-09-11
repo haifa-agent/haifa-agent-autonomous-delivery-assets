@@ -1,0 +1,18 @@
+caseId: L4-04
+level: L4
+title: Extend status API without breaking consumers
+labels:
+  localization: 2
+  modificationSpan: 4
+  acceptance: 4
+variants: [REGRESSION_PROTECTION]
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 480
+  maxModelCalls: 70
+  maxToolCalls: 110
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

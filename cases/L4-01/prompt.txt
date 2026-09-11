@@ -1,0 +1,11 @@
+Add a `priority` field to the task across the layers of the bundled mini-project:
+
+- `api/schema.py`: declare the field, its default and the required-field list,
+- `core/task.py`: hold it in the domain model,
+- `adapter/json_adapter.py`: map it in both directions,
+- `store/task_store.py`: persist it in the projection,
+- `api/service.py`: keep the required-field validation working for callers that omit the new field.
+
+Writes go through the public `TaskApi`; a created task must round-trip with its priority, omitting it
+must apply the default, and the existing `id`/`title` behaviour must not change. Change only those
+five files; existing tests may not be modified.

@@ -1,0 +1,6 @@
+Symptom: report generation crashes with an `AttributeError` on a `None` value. The captured stack
+trace is stored in the workspace; no file path is given in this task.
+
+Make the module tolerate the missing data the same way it already tolerates empty data, then make
+the suite green. A previous attempt only covered one of the two cases and is still red. Change only
+`report.py`; existing tests may not be modified.

@@ -1,0 +1,7 @@
+Thread an optional `coupon_code` field through the bundled mini-project:
+
+- add it to the request DTO in `dto.py` (optional, omitted means "no coupon"),
+- pass it through `order_service.py`,
+- serialize it as `couponCode` in `serializers.py`, present and `null` when omitted.
+
+Change only `dto.py`, `order_service.py` and `serializers.py`; existing tests may not be modified.

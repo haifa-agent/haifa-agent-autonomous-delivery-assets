@@ -1,0 +1,18 @@
+caseId: L2-05
+level: L2
+title: Add page size while preserving default ordering
+labels:
+  localization: 1
+  modificationSpan: 3
+  acceptance: 3
+variants: [REGRESSION_PROTECTION]
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 420
+  maxModelCalls: 60
+  maxToolCalls: 90
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional
