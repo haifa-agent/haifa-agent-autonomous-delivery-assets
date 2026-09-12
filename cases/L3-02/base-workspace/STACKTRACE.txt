@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "/workspace/report.py", line 21, in render
-    for row in section.rows:
-AttributeError: 'NoneType' object is not iterable
-
-Captured while rendering the nightly report. The previous attempt at a guard only covered the
-empty-list case, so a section without rows still crashes.

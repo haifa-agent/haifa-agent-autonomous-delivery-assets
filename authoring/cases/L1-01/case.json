@@ -1,0 +1,19 @@
+{
+  "caseId": "L1-01",
+  "title": "Fix off-by-one page window slicing",
+  "labels": [1, 1, 1],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [300, 40, 60],
+  "smallAgents": true,
+  "editable": ["pagination.py"],
+  "changeBudget": [1, 1],
+  "hiddenChecks": [
+    "functional.fullPages",
+    "boundary.lastPartialPage",
+    "boundary.beyondEndAndEmptyInput",
+    "boundary.randomizedWindows",
+    "regression.argumentValidation",
+    "regression.pageCountUnchanged"
+  ]
+}

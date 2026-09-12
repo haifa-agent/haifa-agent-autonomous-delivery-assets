@@ -1,0 +1,18 @@
+{
+  "caseId": "L3-04",
+  "title": "Diagnose batch import hang on large input",
+  "labels": [3, 1, 2],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [600, 70, 110],
+  "opsdesk": true,
+  "editable": ["opsdesk/*"],
+  "changeBudget": [1, 2],
+  "checkTimeout": 45,
+  "hiddenChecks": [
+    "functional.largeImportIsFast",
+    "functional.cliLargeImportCompletes",
+    "regression.importResultsUnchanged",
+    "regression.storeContract"
+  ]
+}

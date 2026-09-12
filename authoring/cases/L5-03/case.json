@@ -1,0 +1,21 @@
+{
+  "caseId": "L5-03",
+  "title": "Rename calculation entry point backward compatibly",
+  "labels": [2, 2, 4],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [480, 70, 110],
+  "smallAgents": true,
+  "snippets": ["frozen_files.py"],
+  "editable": ["pricing.py"],
+  "changeBudget": [1, 1],
+  "hiddenChecks": [
+    "functional.calculateBehaviour",
+    "regression.calcPositionalAndKeyword",
+    "boundary.calcStillValidates",
+    "functional.deprecationWarning",
+    "regression.callersKeepWorking",
+    "constraint.singleImplementation",
+    "constraint.callersUntouched"
+  ]
+}

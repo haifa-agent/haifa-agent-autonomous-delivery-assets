@@ -1,0 +1,21 @@
+{
+  "caseId": "L2-05",
+  "title": "Add page size while preserving default ordering",
+  "labels": [1, 2, 3],
+  "variants": ["REGRESSION_PROTECTION"],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [420, 60, 90],
+  "smallAgents": true,
+  "editable": ["*.py"],
+  "changeBudget": [1, 3],
+  "hiddenChecks": [
+    "functional.pageSizeApplied",
+    "functional.defaultStaysTwenty",
+    "boundary.rangeValidation",
+    "functional.pagesFollowDefaultOrder",
+    "regression.defaultOrderUnchanged",
+    "regression.recordShapeUnchanged",
+    "regression.resultsAreCopies",
+    "regression.dashboardUnchanged"
+  ]
+}

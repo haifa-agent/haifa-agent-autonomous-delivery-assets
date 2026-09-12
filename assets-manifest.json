@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "assetVersion": "2026.09.11.1",
+  "assetVersion": "2026.09.11.2",
   "caseRoot": "cases",
-  "caseTreeSha256": "9e9ca3dd23009841ff32d7a3b8bf31fb72f7554886829fa2fc8f4c6bff264187",
+  "caseTreeSha256": "223f48a78aa2a26270faea55277a9e56dc0996f958ec64e2e91970437cc2f237",
   "cases": [
     "L1-01", "L1-02", "L1-03", "L1-04", "L1-05",
     "L2-01", "L2-02", "L2-03", "L2-04", "L2-05",

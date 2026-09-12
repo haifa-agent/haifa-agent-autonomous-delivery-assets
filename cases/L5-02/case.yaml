@@ -1,14 +1,14 @@
 caseId: L5-02
 level: L5
-title: Speed up dedup using standard library only
+title: Deduplicate exports without touching the frozen runtime
 labels:
-  localization: 3
+  localization: 2
   modificationSpan: 2
   acceptance: 4
 variants: []
 language: PYTHON
 promptLanguage: en
-caseVersion: 1.0.0
+caseVersion: 2.0.0
 runnerBudget:
   timeoutSeconds: 600
   maxModelCalls: 70

@@ -1,0 +1,21 @@
+{
+  "caseId": "L4-03",
+  "title": "Add validated tool parameter across boundaries",
+  "labels": [3, 4, 3],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [720, 90, 140],
+  "opsdesk": true,
+  "snippets": ["layer_check.py"],
+  "editable": ["opsdesk/*"],
+  "changeBudget": [4, 7],
+  "hiddenChecks": [
+    "functional.defaultAppliedAsInt",
+    "functional.valueForwardedAsInt",
+    "boundary.rangeEnforced",
+    "boundary.nonIntegerRejected",
+    "functional.parameterDescribed",
+    "regression.existingParameters",
+    "constraint.layerDirection"
+  ]
+}

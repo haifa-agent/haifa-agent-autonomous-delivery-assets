@@ -1,0 +1,18 @@
+{
+  "caseId": "L1-02",
+  "title": "Fix century leap-year rule",
+  "labels": [1, 1, 1],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [300, 40, 60],
+  "smallAgents": true,
+  "editable": ["dates.py"],
+  "changeBudget": [1, 1],
+  "hiddenChecks": [
+    "functional.centuryRule",
+    "boundary.randomizedYears",
+    "functional.februaryLengths",
+    "regression.otherMonthsUnchanged",
+    "regression.monthRangeValidation"
+  ]
+}

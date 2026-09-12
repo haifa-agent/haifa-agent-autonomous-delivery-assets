@@ -1,0 +1,18 @@
+{
+  "caseId": "L1-04",
+  "title": "Fix integer division in conversion rate",
+  "labels": [1, 1, 1],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [300, 40, 60],
+  "smallAgents": true,
+  "editable": ["metrics.py"],
+  "changeBudget": [1, 1],
+  "hiddenChecks": [
+    "functional.ratioRounded",
+    "boundary.randomizedRatios",
+    "boundary.wholeAndZeroRates",
+    "regression.rendererKeepsWorking",
+    "regression.invalidVisitsRejected"
+  ]
+}

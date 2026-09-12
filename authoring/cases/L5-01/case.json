@@ -1,0 +1,20 @@
+{
+  "caseId": "L5-01",
+  "title": "Validate emails without new public types",
+  "labels": [2, 2, 4],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [480, 70, 110],
+  "smallAgents": true,
+  "editable": ["accounts.py", "signup.py"],
+  "changeBudget": [1, 2],
+  "hiddenChecks": [
+    "functional.malformedRejectedWithCode",
+    "functional.validAddressesStored",
+    "functional.signupAnswers400",
+    "boundary.randomizedAddresses",
+    "regression.duplicateStillReported",
+    "constraint.publicApiFrozen",
+    "constraint.registerSignatureKept"
+  ]
+}

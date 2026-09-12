@@ -1,0 +1,20 @@
+{
+  "caseId": "L4-04",
+  "title": "Extend status API without breaking consumers",
+  "labels": [3, 3, 4],
+  "variants": ["REGRESSION_PROTECTION"],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [720, 90, 140],
+  "opsdesk": true,
+  "snippets": ["layer_check.py"],
+  "editable": ["opsdesk/*"],
+  "changeBudget": [3, 6],
+  "hiddenChecks": [
+    "functional.reasonCodeExposed",
+    "functional.nonFailedStatusesExposeNull",
+    "boundary.reasonCodeValidation",
+    "regression.recordedV1Contract",
+    "regression.alertsUnchanged",
+    "constraint.layerDirection"
+  ]
+}

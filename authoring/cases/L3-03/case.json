@@ -1,0 +1,18 @@
+{
+  "caseId": "L3-03",
+  "title": "Diagnose double-counted midnight transactions",
+  "labels": [4, 1, 2],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [600, 70, 110],
+  "opsdesk": true,
+  "editable": ["opsdesk/*"],
+  "changeBudget": [1, 2],
+  "hiddenChecks": [
+    "functional.midnightBelongsToNextDay",
+    "boundary.lastSecondOfDayCounted",
+    "boundary.randomizedDayPartition",
+    "functional.cliNightlyTotals",
+    "regression.dayWindowContract"
+  ]
+}

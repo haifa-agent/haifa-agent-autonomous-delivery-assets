@@ -1,0 +1,20 @@
+{
+  "caseId": "L4-02",
+  "title": "Introduce new event type through pipeline",
+  "labels": [3, 3, 3],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [720, 90, 140],
+  "opsdesk": true,
+  "snippets": ["layer_check.py"],
+  "editable": ["opsdesk/*"],
+  "changeBudget": [3, 6],
+  "hiddenChecks": [
+    "functional.retryingDispatched",
+    "functional.retryingProjected",
+    "functional.summaryCountsRetrying",
+    "regression.existingEvents",
+    "boundary.unknownTypesRejected",
+    "constraint.layerDirection"
+  ]
+}

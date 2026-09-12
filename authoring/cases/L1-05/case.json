@@ -1,0 +1,17 @@
+{
+  "caseId": "L1-05",
+  "title": "Make record search case-insensitive",
+  "labels": [1, 1, 1],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [300, 40, 60],
+  "smallAgents": true,
+  "editable": ["search.py"],
+  "changeBudget": [1, 1],
+  "hiddenChecks": [
+    "functional.asciiCaseInsensitive",
+    "boundary.randomizedQueries",
+    "boundary.emptyQueryAndNoMatch",
+    "regression.orderAndIdentityPreserved"
+  ]
+}
