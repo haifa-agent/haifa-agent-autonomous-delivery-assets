@@ -1,0 +1,19 @@
+{
+  "caseId": "L3-02",
+  "title": "Recover nightly report from a crash and a wrong fix",
+  "labels": [3, 2, 2],
+  "variants": ["ERROR_RECOVERY"],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [600, 70, 110],
+  "opsdesk": true,
+  "editable": ["opsdesk/*"],
+  "changeBudget": [2, 3],
+  "hiddenChecks": [
+    "functional.missingRowsFallback",
+    "regression.emptyRowsFallback",
+    "regression.rowsRendered",
+    "functional.everyAccountReported",
+    "functional.cliNightlyReport",
+    "regression.accountOrderKept"
+  ]
+}

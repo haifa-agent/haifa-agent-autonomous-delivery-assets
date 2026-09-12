@@ -3,12 +3,12 @@ level: L6
 title: "Open issue: resumable batch export"
 labels:
   localization: 4
-  modificationSpan: 5
+  modificationSpan: 4
   acceptance: 5
 variants: []
 language: JAVA
 promptLanguage: en
-caseVersion: 1.0.0
+caseVersion: 2.0.0
 runnerBudget:
   timeoutSeconds: 900
   maxModelCalls: 90

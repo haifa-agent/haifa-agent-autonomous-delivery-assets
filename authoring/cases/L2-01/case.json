@@ -1,0 +1,17 @@
+{
+  "caseId": "L2-01",
+  "title": "Thread verbose flag through config to CLI",
+  "labels": [1, 2, 2],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [420, 60, 90],
+  "smallAgents": true,
+  "editable": ["cli.py", "config.py", "report.py"],
+  "changeBudget": [1, 3],
+  "hiddenChecks": [
+    "functional.verboseStepLines",
+    "regression.quietOutputByteIdentical",
+    "boundary.flagPositionIndependent",
+    "regression.unknownArgumentsIgnored"
+  ]
+}

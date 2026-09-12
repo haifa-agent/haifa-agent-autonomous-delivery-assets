@@ -1,0 +1,1 @@
+"""Persistence of domain objects."""

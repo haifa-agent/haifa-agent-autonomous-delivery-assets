@@ -3,12 +3,12 @@ level: L2
 title: Thread verbose flag through config to CLI
 labels:
   localization: 1
-  modificationSpan: 3
+  modificationSpan: 2
   acceptance: 2
 variants: []
 language: PYTHON
 promptLanguage: en
-caseVersion: 1.0.0
+caseVersion: 2.0.0
 runnerBudget:
   timeoutSeconds: 420
   maxModelCalls: 60

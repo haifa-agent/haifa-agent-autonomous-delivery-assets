@@ -1,0 +1,20 @@
+{
+  "caseId": "L2-04",
+  "title": "Add CSV export beside existing JSON export",
+  "labels": [1, 2, 2],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [420, 60, 90],
+  "smallAgents": true,
+  "editable": ["*.py"],
+  "changeBudget": [2, 4],
+  "hiddenChecks": [
+    "functional.csvRegistered",
+    "functional.headerAndRowOrder",
+    "boundary.csvQuoting",
+    "boundary.emptyRows",
+    "functional.cliFormatFlag",
+    "regression.jsonOutputByteIdentical",
+    "boundary.unknownFormatRejected"
+  ]
+}

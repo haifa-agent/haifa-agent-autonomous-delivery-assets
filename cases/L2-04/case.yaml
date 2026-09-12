@@ -2,13 +2,13 @@ caseId: L2-04
 level: L2
 title: Add CSV export beside existing JSON export
 labels:
-  localization: 2
-  modificationSpan: 3
+  localization: 1
+  modificationSpan: 2
   acceptance: 2
 variants: []
 language: PYTHON
 promptLanguage: en
-caseVersion: 1.0.0
+caseVersion: 2.0.0
 runnerBudget:
   timeoutSeconds: 420
   maxModelCalls: 60

@@ -1,0 +1,22 @@
+{
+  "caseId": "L4-01",
+  "title": "Propagate priority field across all layers",
+  "labels": [3, 4, 3],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [720, 90, 140],
+  "opsdesk": true,
+  "snippets": ["layer_check.py"],
+  "editable": ["opsdesk/*"],
+  "changeBudget": [4, 7],
+  "hiddenChecks": [
+    "functional.schemaDeclaresPriority",
+    "functional.roundTripThroughApi",
+    "boundary.defaultPriority",
+    "functional.persistsAcrossRestart",
+    "regression.legacyStoreRows",
+    "boundary.priorityRangeValidated",
+    "regression.existingBehaviour",
+    "constraint.layerDirection"
+  ]
+}

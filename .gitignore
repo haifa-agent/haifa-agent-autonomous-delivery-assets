@@ -2,3 +2,7 @@ local-runs/
 reports/
 __pycache__/
 *.pyc
+
+# The captured job log belongs to case L3-02; a global *.log rule must not hide it.
+!cases/**/logs/*.log
+!authoring/**/logs/*.log

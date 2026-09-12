@@ -1,0 +1,24 @@
+{
+  "caseId": "L5-02",
+  "title": "Deduplicate exports without touching the frozen runtime",
+  "labels": [2, 2, 4],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [600, 70, 110],
+  "smallAgents": true,
+  "snippets": ["frozen_files.py"],
+  "editable": ["*.py"],
+  "protected": ["runtime/*"],
+  "changeBudget": [1, 3],
+  "checkTimeout": 30,
+  "hiddenChecks": [
+    "functional.duplicatesDropped",
+    "functional.positionsConsecutive",
+    "boundary.idsComparedAfterNormalization",
+    "functional.largeBatchIsFast",
+    "regression.otherStagesStillRun",
+    "constraint.runtimeUntouched",
+    "constraint.stdlibOnly",
+    "constraint.exportSignatureKept"
+  ]
+}

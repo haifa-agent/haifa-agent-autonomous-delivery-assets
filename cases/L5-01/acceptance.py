@@ -1,66 +1,392 @@
 #!/usr/bin/env python3
-"""Black-box acceptance for ladder case L3-01; prints one JSON line on stdout."""
+"""Black-box acceptance for ladder case L5-01; prints one JSON line on stdout.
+
+Every hidden check runs in its own interpreter so that one crashing or hanging check cannot
+zero the others. Hygiene only guards what the case promises: existing tests and protected
+files stay byte-identical, changed source files stay inside the editable scope and the change
+budget. New test files and tool caches (``.pytest_cache``, ``__pycache__``...) are allowed.
+The final stderr line is ``DIAGNOSTICS {...}`` with the reason of every failed check.
+"""
 
 from __future__ import annotations
 
+import fnmatch
 import hashlib
 import json
+import os
+import secrets
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
 CASE_ROOT = Path(__file__).resolve().parent
 BASELINE = CASE_ROOT / "base-workspace"
 CASE_ID = "L5-01"
-CASE_VERSION = "1.0.0"
-ALLOWED_CHANGES = {"accounts.py"}
-MAX_CHANGED_FILES = 1
-CHECK_NAMES = ("hygiene.testsUnchanged", "hygiene.scopeRespected", "hygiene.changeBudget", "functional.visibleTests", "functional.malformedRejected", "functional.validAccepted", "regression.existingSignatureKept", "constraint.noNewPublicTypes")
-HIDDEN_SCRIPT = """import ast, json, sys
-from pathlib import Path
-sys.path.insert(0, sys.argv[1])
-from accounts import ACCOUNTS, register
-source = Path(sys.argv[1], "accounts.py").read_text(encoding="utf-8")
-tree = ast.parse(source)
-public_names = set()
-for node in tree.body:
-    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and not node.name.startswith("_"):
-        public_names.add(node.name)
-rejected = True
-for invalid in ("nope", "a@b", "a@b.", "@b.com", "a b@c.com", "a@b..com"):
+CASE_VERSION = "2.0.0"
+TEST_ROOTS = ('tests',)
+SOURCE_SUFFIXES = ('.py',)
+EDITABLE = ('accounts.py', 'signup.py')
+PROTECTED = ()
+CHANGE_BUDGET = (1, 2)
+VISIBLE_TESTS = ('-m', 'unittest', 'discover', '-s', 'tests')
+VISIBLE_TIMEOUT_SECONDS = 180
+CHECK_TIMEOUT_SECONDS = 60
+HIDDEN_CHECKS = (
+    "functional.malformedRejectedWithCode",
+    "functional.validAddressesStored",
+    "functional.signupAnswers400",
+    "boundary.randomizedAddresses",
+    "regression.duplicateStillReported",
+    "constraint.publicApiFrozen",
+    "constraint.registerSignatureKept",
+)
+IGNORED_DIRS = frozenset(
+    {
+        "__pycache__",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".ruff_cache",
+        ".hypothesis",
+        ".tox",
+        ".nox",
+        ".git",
+        ".hg",
+        ".svn",
+        ".idea",
+        ".vscode",
+        ".venv",
+        "venv",
+        "node_modules",
+        "target",
+        "build",
+        "dist",
+    }
+)
+IGNORED_SUFFIXES = (".pyc", ".pyo", ".class")
+TEST_FILE_PATTERNS = ("test_*.py", "*_test.py", "conftest.py", "*Test.java", "*Tests.java")
+
+HIDDEN_SCRIPT = r'''
+import json
+import os
+import sys
+
+WORKSPACE = os.path.abspath(sys.argv[1])
+CHECK_NAME = sys.argv[2]
+NONCE = sys.argv[3]
+SCRATCH = sys.argv[4]
+sys.path.insert(0, WORKSPACE)
+CHECKS = {}
+
+
+def check(name):
+    def register(function):
+        CHECKS[name] = function
+        return function
+
+    return register
+
+import ast
+import inspect
+import os
+import random
+import string
+import sys
+
+BASELINE_PUBLIC = {"accounts.py": {"RegistrationError", "ACCOUNTS", "register"}, "signup.py": {"handle_signup"}}
+INVALID = ("nope", "a@b", "@b.com", "a b@c.com", "a@b..com", "a@.com", "a@b.c", "a@@b.com", "a@b.com.", "a@b.c0m", "a@b_c.com")
+VALID = ("user.name+tag@example.co.uk", "x@y.io", "first-last@sub-domain.example.org", "o'neil@a1.b2.info")
+
+
+def _valid(address):
+    if address.count("@") != 1:
+        return False
+    local, domain = address.split("@")
+    if not local or any(character.isspace() for character in local):
+        return False
+    labels = domain.split(".")
+    allowed = set(string.ascii_letters + string.digits + "-")
+    if len(labels) < 2 or any(not label or set(label) - allowed for label in labels):
+        return False
+    return len(labels[-1]) >= 2 and all(character in string.ascii_letters for character in labels[-1])
+
+
+def _outcome(email):
+    from accounts import ACCOUNTS, RegistrationError, register
+
+    ACCOUNTS.clear()
     try:
-        register(invalid)
-        rejected = False
-    except ValueError:
-        pass
-accounts_after_invalid = list(ACCOUNTS)
-ACCOUNTS.clear()
-account = register("user.name+tag@example.co.uk")
-checks = {
-    "functional.malformedRejected": rejected and accounts_after_invalid == [],
-    "functional.validAccepted": account == {"email": "user.name+tag@example.co.uk"} and ACCOUNTS == [account],
-    "regression.existingSignatureKept": list(register.__code__.co_varnames[:1]) == ["email"],
-    "constraint.noNewPublicTypes": public_names <= {"register"},
-}
-print(json.dumps(checks))"""
+        account = register(email)
+    except RegistrationError as error:
+        return ("rejected", error.code, list(ACCOUNTS))
+    return ("stored", account, list(ACCOUNTS))
+
+
+def _public_names(filename):
+    tree = ast.parse(open(os.path.join(WORKSPACE, filename), encoding="utf-8").read())
+    names = set()
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            names.add(node.name)
+        elif isinstance(node, ast.Assign):
+            names.update(target.id for target in node.targets if isinstance(target, ast.Name))
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            names.add(node.target.id)
+    return {name for name in names if not name.startswith("_")}
+
+
+@check("functional.malformedRejectedWithCode")
+def malformed_rejected():
+    for email in INVALID:
+        outcome = _outcome(email)
+        if outcome != ("rejected", "invalid_email", []):
+            return False, f"{email!r}: {outcome}"
+    return True
+
+
+@check("functional.validAddressesStored")
+def valid_stored():
+    for email in VALID:
+        outcome = _outcome(email)
+        if outcome != ("stored", {"email": email}, [{"email": email}]):
+            return False, f"{email!r}: {outcome}"
+    return True
+
+
+@check("functional.signupAnswers400")
+def signup_answers():
+    from accounts import ACCOUNTS
+    from signup import handle_signup
+
+    ACCOUNTS.clear()
+    rejected = handle_signup({"email": "a@b"})
+    missing = handle_signup({})
+    accepted = handle_signup({"email": "ok@example.org"})
+    return (
+        rejected == (400, {"error": "invalid_email"})
+        and missing == (400, {"error": "invalid_email"})
+        and accepted == (201, {"email": "ok@example.org"}),
+        f"{rejected} {missing} {accepted}",
+    )
+
+
+@check("boundary.randomizedAddresses")
+def randomized():
+    rng = random.Random(20260911)
+    pieces_local = ["ab", "x.y", "+t", "", " ", "q_z", "\t", "é"]
+    pieces_label = ["ab", "c1", "d-e", "", "g", "HI", "_x", "9"]
+    for _ in range(600):
+        local = "".join(rng.choice(pieces_local) for _ in range(rng.randint(0, 2)))
+        labels = [rng.choice(pieces_label) for _ in range(rng.randint(1, 3))]
+        address = local + "@" * rng.choice((0, 1, 1, 1, 2)) + ".".join(labels)
+        outcome = _outcome(address)
+        expected_valid = _valid(address)
+        if expected_valid and outcome[0] != "stored":
+            return False, f"valid {address!r} rejected"
+        if not expected_valid and outcome[:2] != ("rejected", "invalid_email"):
+            return False, f"invalid {address!r} -> {outcome[:2]}"
+    return True
+
+
+@check("regression.duplicateStillReported")
+def duplicate_reported():
+    from accounts import ACCOUNTS, RegistrationError, register
+
+    ACCOUNTS.clear()
+    register("dup@example.com")
+    try:
+        register("dup@example.com")
+    except RegistrationError as error:
+        return error.code == "duplicate_email" and isinstance(error, ValueError) and len(ACCOUNTS) == 1
+    return False, "duplicate accepted"
+
+
+@check("constraint.publicApiFrozen")
+def public_api_frozen():
+    for filename, baseline in BASELINE_PUBLIC.items():
+        names = _public_names(filename)
+        if names != baseline:
+            return False, f"{filename} public names {sorted(names)} != {sorted(baseline)}"
+    for filename in BASELINE_PUBLIC:
+        tree = ast.parse(open(os.path.join(WORKSPACE, filename), encoding="utf-8").read())
+        for node in ast.walk(tree):
+            modules = []
+            if isinstance(node, ast.Import):
+                modules = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.module and not node.level:
+                modules = [node.module]
+            for module in modules:
+                top = module.split(".")[0]
+                if top not in sys.stdlib_module_names and top not in {"accounts", "signup", "__future__"}:
+                    return False, f"{filename} imports third-party module {module}"
+    return True
+
+
+@check("constraint.registerSignatureKept")
+def signature_kept():
+    from accounts import register
+
+    parameters = list(inspect.signature(register).parameters.values())
+    return (
+        [parameter.name for parameter in parameters] == ["email"]
+        and parameters[0].default is inspect.Parameter.empty
+        and parameters[0].kind is inspect.Parameter.POSITIONAL_OR_KEYWORD,
+        str(inspect.signature(register)),
+    )
+
+
+def _main():
+    try:
+        outcome = CHECKS[CHECK_NAME]()
+        if isinstance(outcome, tuple):
+            ok, detail = bool(outcome[0]), str(outcome[1])
+        else:
+            ok, detail = outcome is True, "" if outcome is True else "returned " + repr(outcome)
+    except BaseException as error:  # candidate code may raise anything, including SystemExit
+        ok, detail = False, type(error).__name__ + ": " + str(error)
+    sys.stdout.flush()
+    print(NONCE + json.dumps({"ok": ok, "detail": detail[:300]}), flush=True)
+
+
+_main()
+'''
+
+
+def child_env() -> dict[str, str]:
+    env = dict(os.environ)
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    env["PYTHONHASHSEED"] = "0"
+    env["PYTHONIOENCODING"] = "utf-8"
+    env.pop("PYTHONPATH", None)
+    return env
 
 
 def digest_tree(root: Path) -> dict[str, str]:
     digests: dict[str, str] = {}
     if not root.is_dir():
         return digests
-    for path in sorted(root.rglob("*")):
-        if not path.is_file() or "__pycache__" in path.parts or path.suffix == ".pyc":
-            continue
-        digests[path.relative_to(root).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+    for directory, dirnames, filenames in os.walk(root):
+        dirnames[:] = sorted(name for name in dirnames if name not in IGNORED_DIRS and not name.endswith(".egg-info"))
+        for filename in sorted(filenames):
+            if filename.endswith(IGNORED_SUFFIXES):
+                continue
+            path = Path(directory, filename)
+            digests[path.relative_to(root).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
     return digests
 
 
-def changed_sources(workspace: Path) -> set[str]:
-    baseline = {path: digest for path, digest in digest_tree(BASELINE).items() if not path.startswith("tests/")}
-    candidate = {path: digest for path, digest in digest_tree(workspace).items() if not path.startswith("tests/")}
-    return {path for path in set(baseline) | set(candidate) if baseline.get(path) != candidate.get(path)}
+def is_test_path(relative: str) -> bool:
+    if any(relative == root or relative.startswith(root + "/") for root in TEST_ROOTS):
+        return True
+    return any(fnmatch.fnmatchcase(relative.rsplit("/", 1)[-1], pattern) for pattern in TEST_FILE_PATTERNS)
+
+
+def is_source(relative: str) -> bool:
+    return relative.endswith(SOURCE_SUFFIXES) and not is_test_path(relative)
+
+
+def is_editable(relative: str) -> bool:
+    if any(fnmatch.fnmatchcase(relative, pattern) for pattern in PROTECTED):
+        return False
+    return any(fnmatch.fnmatchcase(relative, pattern) for pattern in EDITABLE)
+
+
+def hygiene(workspace: Path) -> tuple[dict[str, bool], dict[str, str], list[str]]:
+    baseline = digest_tree(BASELINE)
+    candidate = digest_tree(workspace)
+    checks: dict[str, bool] = {}
+    details: dict[str, str] = {}
+
+    changed_tests = sorted(path for path, digest in baseline.items() if is_test_path(path) and candidate.get(path) != digest)
+    checks["hygiene.existingTestsUnchanged"] = not changed_tests
+    if changed_tests:
+        details["hygiene.existingTestsUnchanged"] = "modified or deleted: " + ", ".join(changed_tests[:5])
+
+    changed_protected = sorted(
+        path
+        for path, digest in baseline.items()
+        if not is_test_path(path) and not is_editable(path) and candidate.get(path) != digest
+    )
+    checks["hygiene.protectedFilesUnchanged"] = not changed_protected
+    if changed_protected:
+        details["hygiene.protectedFilesUnchanged"] = "modified or deleted: " + ", ".join(changed_protected[:5])
+
+    changed_sources = sorted(
+        path
+        for path in set(baseline) | set(candidate)
+        if is_source(path) and baseline.get(path) != candidate.get(path)
+    )
+    outside = [path for path in changed_sources if not is_editable(path)]
+    checks["hygiene.scopeRespected"] = not outside
+    if outside:
+        details["hygiene.scopeRespected"] = "outside the editable scope: " + ", ".join(outside[:5])
+
+    low, high = CHANGE_BUDGET
+    checks["hygiene.changeBudget"] = low <= len(changed_sources) <= high
+    if not checks["hygiene.changeBudget"]:
+        details["hygiene.changeBudget"] = f"{len(changed_sources)} source files changed, budget {low}..{high}"
+    return checks, details, changed_sources
+
+
+def visible_tests(workspace: Path) -> tuple[bool, str]:
+    try:
+        completed = subprocess.run(
+            [sys.executable, *VISIBLE_TESTS],
+            cwd=workspace,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=VISIBLE_TIMEOUT_SECONDS,
+            env=child_env(),
+        )
+    except subprocess.TimeoutExpired:
+        return False, f"visible suite timed out after {VISIBLE_TIMEOUT_SECONDS}s"
+    if completed.returncode == 0:
+        return True, ""
+    tail = [line for line in completed.stderr.splitlines() if line.strip()][-1:]
+    return False, "visible suite red: " + (tail[0] if tail else f"exit {completed.returncode}")
+
+
+def hidden_checks(workspace: Path) -> tuple[dict[str, bool], dict[str, str]]:
+    results: dict[str, bool] = {}
+    details: dict[str, str] = {}
+    with tempfile.TemporaryDirectory(prefix="ladder-acceptance-", ignore_cleanup_errors=True) as directory:
+        script = Path(directory, "hidden_checks.py")
+        script.write_text(HIDDEN_SCRIPT, encoding="utf-8")
+        scratch = Path(directory, "scratch")
+        scratch.mkdir()
+        for name in HIDDEN_CHECKS:
+            nonce = "HIDDEN-" + secrets.token_hex(8) + " "
+            try:
+                completed = subprocess.run(
+                    [sys.executable, str(script), str(workspace), name, nonce, str(scratch)],
+                    cwd=workspace,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=CHECK_TIMEOUT_SECONDS,
+                    env=child_env(),
+                )
+            except subprocess.TimeoutExpired:
+                results[name] = False
+                details[name] = f"timed out after {CHECK_TIMEOUT_SECONDS}s"
+                continue
+            payload = None
+            for line in completed.stdout.splitlines():
+                if line.startswith(nonce):
+                    payload = json.loads(line[len(nonce):])
+            if payload is None:
+                tail = [line for line in completed.stderr.splitlines() if line.strip()][-1:]
+                results[name] = False
+                details[name] = f"no result (exit {completed.returncode}) " + (tail[0] if tail else "")
+                continue
+            results[name] = bool(payload.get("ok"))
+            if not results[name]:
+                details[name] = str(payload.get("detail", ""))
+    return results, details
 
 
 def main() -> int:
@@ -69,35 +395,15 @@ def main() -> int:
         return 2
     workspace = Path(sys.argv[1]).resolve()
     started = time.monotonic()
-    checks = {name: False for name in CHECK_NAMES}
-    changed = changed_sources(workspace)
 
-    checks["hygiene.testsUnchanged"] = digest_tree(workspace / "tests") == digest_tree(BASELINE / "tests")
-    checks["hygiene.scopeRespected"] = changed <= ALLOWED_CHANGES
-    checks["hygiene.changeBudget"] = 0 < len(changed) <= MAX_CHANGED_FILES
-
-    visible = subprocess.run(
-        [sys.executable, "-m", "unittest", "discover", "-s", "tests"],
-        cwd=workspace,
-        capture_output=True,
-        text=True,
-        timeout=180,
-    )
-    checks["functional.visibleTests"] = visible.returncode == 0
-
-    hidden = subprocess.run(
-        [sys.executable, "-c", HIDDEN_SCRIPT, str(workspace)],
-        cwd=workspace,
-        capture_output=True,
-        text=True,
-        timeout=180,
-    )
-    try:
-        for name, value in json.loads(hidden.stdout).items():
-            if name in checks:
-                checks[name] = bool(value)
-    except (json.JSONDecodeError, ValueError):
-        pass
+    checks, details, changed_sources = hygiene(workspace)
+    if VISIBLE_TESTS is not None:
+        checks["functional.visibleTests"], visible_detail = visible_tests(workspace)
+        if visible_detail:
+            details["functional.visibleTests"] = visible_detail
+    hidden_results, hidden_details = hidden_checks(workspace)
+    checks.update(hidden_results)
+    details.update(hidden_details)
 
     failures = [name for name, passed in checks.items() if not passed]
     payload = {
@@ -110,7 +416,13 @@ def main() -> int:
         "failures": failures,
         "durationMillis": int((time.monotonic() - started) * 1000),
     }
-    print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+    workspace_text = str(workspace)
+    diagnostics = {
+        "changedSources": changed_sources,
+        "details": {name: text.replace(workspace_text, "<workspace>")[:300] for name, text in details.items()},
+    }
+    print("DIAGNOSTICS " + json.dumps(diagnostics, ensure_ascii=True, sort_keys=True), file=sys.stderr)
+    print(json.dumps(payload, ensure_ascii=True, sort_keys=True))
     return 0 if not failures else 1
 
 

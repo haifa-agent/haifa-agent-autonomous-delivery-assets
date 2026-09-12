@@ -1,0 +1,23 @@
+{
+  "caseId": "L6-01",
+  "title": "Open issue: bulk inventory import from CSV",
+  "labels": [3, 4, 4],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [900, 90, 160],
+  "smallAgents": true,
+  "issueFile": "ISSUE.md",
+  "editable": ["*.py"],
+  "changeBudget": [1, 8],
+  "hiddenChecks": [
+    "functional.importsValidRows",
+    "functional.partialImportExitsOne",
+    "boundary.rejectionReasonsAndLines",
+    "boundary.byteOrderMarkAccepted",
+    "functional.upsertAndIdempotentReimport",
+    "boundary.missingFileExitsTwo",
+    "boundary.wrongHeaderExitsTwo",
+    "boundary.unwritableStoreExitsTwo",
+    "regression.addAndListUnchanged"
+  ]
+}

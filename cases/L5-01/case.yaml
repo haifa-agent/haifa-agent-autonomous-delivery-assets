@@ -8,7 +8,7 @@ labels:
 variants: []
 language: PYTHON
 promptLanguage: en
-caseVersion: 1.0.0
+caseVersion: 2.0.0
 runnerBudget:
   timeoutSeconds: 480
   maxModelCalls: 70

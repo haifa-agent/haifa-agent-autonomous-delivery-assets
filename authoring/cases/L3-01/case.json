@@ -1,0 +1,19 @@
+{
+  "caseId": "L3-01",
+  "title": "Diagnose settings ignored on Windows paths",
+  "labels": [4, 1, 2],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "runnerBudget": [600, 70, 110],
+  "opsdesk": true,
+  "editable": ["opsdesk/*"],
+  "changeBudget": [1, 2],
+  "hiddenChecks": [
+    "functional.windowsUserPath",
+    "boundary.escapeLookalikePaths",
+    "functional.cliOnWindowsPath",
+    "regression.posixPaths",
+    "regression.malformedLinesStillSkipped",
+    "regression.plainValuesUntouched"
+  ]
+}

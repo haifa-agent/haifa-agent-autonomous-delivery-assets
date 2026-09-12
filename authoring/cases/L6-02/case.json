@@ -1,0 +1,28 @@
+{
+  "caseId": "L6-02",
+  "title": "Open issue: resumable batch export",
+  "labels": [4, 4, 5],
+  "variants": [],
+  "caseVersion": "2.0.0",
+  "language": "JAVA",
+  "runnerBudget": [900, 90, 160],
+  "issueFile": "ISSUE.md",
+  "testRoots": ["src/test"],
+  "sourceSuffixes": [".java"],
+  "editable": ["src/main/java/*", "pom.xml"],
+  "changeBudget": [1, 6],
+  "visibleTests": null,
+  "checkTimeout": 240,
+  "hiddenChecks": [
+    "functional.compilesWithJavac",
+    "functional.interruptedRunExits75",
+    "functional.resumesWithoutLossOrDuplicates",
+    "boundary.resumeFromFirstBatch",
+    "boundary.interruptAtLastBatch",
+    "boundary.repeatedInterruptions",
+    "boundary.rerunAfterCompletionIsNoop",
+    "boundary.outputsAreIndependent",
+    "regression.uninterruptedRunUnchanged",
+    "regression.pomJava17WithoutRuntimeDependencies"
+  ]
+}

@@ -1,6 +1,6 @@
 caseId: L3-03
 level: L3
-title: Diagnose duplicate nightly aggregation entries
+title: Diagnose double-counted midnight transactions
 labels:
   localization: 4
   modificationSpan: 1
@@ -8,11 +8,11 @@ labels:
 variants: []
 language: PYTHON
 promptLanguage: en
-caseVersion: 1.0.0
+caseVersion: 2.0.0
 runnerBudget:
-  timeoutSeconds: 420
-  maxModelCalls: 60
-  maxToolCalls: 90
+  timeoutSeconds: 600
+  maxModelCalls: 70
+  maxToolCalls: 110
 acceptance:
   entry: acceptance.py
   workspaceArg: positional

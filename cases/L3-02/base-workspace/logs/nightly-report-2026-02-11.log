@@ -1,0 +1,17 @@
+2026-02-11 02:00:01 INFO  scheduler: starting job nightly-report night=2026-02-10
+2026-02-11 02:00:01 INFO  nightly-report: loaded 6 transactions, 3 accounts
+2026-02-11 02:00:02 ERROR nightly-report: job failed
+Traceback (most recent call last):
+  File "/srv/opsdesk/opsdesk/__main__.py", line 41, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/srv/opsdesk/opsdesk/__main__.py", line 33, in main
+    print("\n".join(build_nightly_report(transactions, arguments.night, accounts)))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opsdesk/opsdesk/reporting/nightly.py", line 18, in build_nightly_report
+    lines.extend(render(sections))
+                 ^^^^^^^^^^^^^^^^
+  File "/srv/opsdesk/opsdesk/reporting/render.py", line 22, in render
+    for row in section.rows:
+TypeError: 'NoneType' object is not iterable
+2026-02-11 02:00:02 INFO  scheduler: job nightly-report exited with status 1
