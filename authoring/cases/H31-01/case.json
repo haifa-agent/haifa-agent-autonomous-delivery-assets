@@ -1,0 +1,34 @@
+{
+  "caseId": "H31-01",
+  "caseSet": "hard-v1",
+  "title": "Change the default catalogue order",
+  "dimension": "blast-radius",
+  "tier": 1,
+  "labels": [3, 3, 4],
+  "variants": [],
+  "caseVersion": "1.0.0",
+  "runnerBudget": [540, 70, 110],
+  "kiosk": true,
+  "editable": ["kiosk/*", "var/*"],
+  "changeBudget": [1, 4],
+  "hiddenChecks": [
+    "functional.defaultOrderIsPopularity",
+    "boundary.equalPopularityIsSeparatedBySku",
+    "regression.aStaleCacheIsNotServed",
+    "regression.cursorPagingHasNoGapOrOverlap",
+    "boundary.aCursorOfAnotherOrderIsRejected",
+    "regression.explicitOrdersAreUnchanged",
+    "regression.theCommandLineFollowsTheNewDefault",
+    "regression.searchAndRestockAreUnchanged"
+  ],
+  "promptDerivable": {
+    "functional.defaultOrderIsPopularity": true,
+    "boundary.equalPopularityIsSeparatedBySku": true,
+    "regression.aStaleCacheIsNotServed": false,
+    "regression.cursorPagingHasNoGapOrOverlap": false,
+    "boundary.aCursorOfAnotherOrderIsRejected": false,
+    "regression.explicitOrdersAreUnchanged": true,
+    "regression.theCommandLineFollowsTheNewDefault": true,
+    "regression.searchAndRestockAreUnchanged": false
+  }
+}

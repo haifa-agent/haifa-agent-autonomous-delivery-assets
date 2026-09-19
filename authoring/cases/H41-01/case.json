@@ -1,0 +1,32 @@
+{
+  "caseId": "H41-01",
+  "caseSet": "hard-v1",
+  "title": "Make a red suite green through two independent defects",
+  "dimension": "long-horizon",
+  "tier": 1,
+  "labels": [2, 2, 4],
+  "variants": ["ERROR_RECOVERY"],
+  "caseVersion": "1.0.0",
+  "runnerBudget": [540, 70, 110],
+  "kiosk": true,
+  "editable": ["kiosk/*", "var/*"],
+  "changeBudget": [1, 3],
+  "hiddenChecks": [
+    "functional.theDiscountEntryPointIsBack",
+    "functional.aTierStartsAtItsMinimum",
+    "boundary.everyTierMinimumAndTheCentBelowIt",
+    "boundary.theDiscountIsRoundedDown",
+    "regression.theCartBreakdownAddsUp",
+    "regression.theRestOfTheProductStillWorks",
+    "constraint.aCustomTierTableIsHonoured"
+  ],
+  "promptDerivable": {
+    "functional.theDiscountEntryPointIsBack": false,
+    "functional.aTierStartsAtItsMinimum": false,
+    "boundary.everyTierMinimumAndTheCentBelowIt": false,
+    "boundary.theDiscountIsRoundedDown": false,
+    "regression.theCartBreakdownAddsUp": false,
+    "regression.theRestOfTheProductStillWorks": false,
+    "constraint.aCustomTierTableIsHonoured": false
+  }
+}

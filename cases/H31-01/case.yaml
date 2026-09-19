@@ -1,0 +1,18 @@
+caseId: H31-01
+level: H3
+title: Change the default catalogue order
+labels:
+  localization: 3
+  modificationSpan: 3
+  acceptance: 4
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 540
+  maxModelCalls: 70
+  maxToolCalls: 110
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

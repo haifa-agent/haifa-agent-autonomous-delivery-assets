@@ -1,0 +1,18 @@
+caseId: H11-01
+level: H1
+title: Diagnose rows that vanish out of a supplier import
+labels:
+  localization: 5
+  modificationSpan: 1
+  acceptance: 3
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 480
+  maxModelCalls: 60
+  maxToolCalls: 90
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

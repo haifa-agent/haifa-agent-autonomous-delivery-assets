@@ -1,0 +1,18 @@
+caseId: H41-01
+level: H4
+title: Make a red suite green through two independent defects
+labels:
+  localization: 2
+  modificationSpan: 2
+  acceptance: 4
+variants: [ERROR_RECOVERY]
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 540
+  maxModelCalls: 70
+  maxToolCalls: 110
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

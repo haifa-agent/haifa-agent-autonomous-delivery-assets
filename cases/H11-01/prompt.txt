@@ -1,0 +1,9 @@
+Support ticket for the bundled kiosk project:
+
+> Our nightly supplier import keeps losing rows. Last night the feed held 4812 rows and the run
+> reported 4796 accepted and 11 rejected: five rows are simply gone. Nothing is printed about them,
+> they are not in the catalogue, and nobody can tell afterwards which rows they were. It does not
+> happen every night, and a short feed always adds up.
+
+No file or function is known to be involved. Find the root cause and fix it with a minimal change.
+Do not modify the existing tests or the files in `data/`.

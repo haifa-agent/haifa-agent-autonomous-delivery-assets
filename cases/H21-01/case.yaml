@@ -1,0 +1,18 @@
+caseId: H21-01
+level: H2
+title: Add a CSV export beside the JSON one
+labels:
+  localization: 2
+  modificationSpan: 2
+  acceptance: 4
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 480
+  maxModelCalls: 60
+  maxToolCalls: 90
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

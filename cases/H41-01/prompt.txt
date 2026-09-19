@@ -1,0 +1,7 @@
+The bundled kiosk project does not pass its own test suite.
+
+Make `python -m unittest discover -s tests` green. There is no list of defects: work from what the
+suite reports.
+
+The existing tests are the contract: do not modify or delete them, and leave the files in `data/`
+as they are.

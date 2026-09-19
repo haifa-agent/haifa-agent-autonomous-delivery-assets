@@ -6,6 +6,32 @@ The main repository owns the runner, result contract, asset downloader, and offl
 repository owns the authored cases under `cases/<caseId>/`, the manifest that identifies an immutable asset
 set, and the authoring sources under `authoring/` that generate them.
 
+## Case sets
+
+`assets-manifest.json` publishes every case twice: once in the flat `cases` list, and once inside the
+`caseSets` object that groups them. The sets are disjoint and together cover every published case; the
+runner evaluates exactly one of them per run (`--case-set`).
+
+| Case set | Cases | Purpose |
+| --- | --- | --- |
+| `ladder-v1` | `L1-01` .. `L6-02` (23) | The capability ladder: the daily regression probe |
+| `hard-v1` | `H<dimension><tier>-<seq>` | The high-difficulty probe set, one level above the ladder |
+
+A `hard-v1` case id encodes what it probes: `H12-01` is capability dimension 1 at difficulty tier 2.
+The dimensions are localization (1), specification gap (2), blast radius (3) and long-horizon
+convergence (4); a case withholds exactly one class of information, so a failure attributes to one
+dimension. The design is
+`docs/prompts/34-testing-architecture-simplification/34-autonomous-delivery-hard-ladder-design.md`
+in the main repository's documentation repo.
+
+Two rules keep `hard-v1` a capability probe rather than a transcription exercise:
+
+- **The statement is not the acceptance list.** Every case declares, per hidden check, whether the
+  prompt already answers it (`promptDerivable` in `case.json`). `authoring/build.py` refuses a case
+  whose prompt covers more than 60% of its checks.
+- **A pass is a pass rate.** The runner repeats a `hard-v1` case three times by default, so one lucky
+  run does not count as a pass.
+
 ## Safety boundary
 
 - Do not commit credentials, provider configuration, model transcripts, runtime databases, traces, or personal/production data.
@@ -14,7 +40,7 @@ set, and the authoring sources under `authoring/` that generate them.
 - `cases/` is generated: edit `authoring/` and run `authoring/build.py`, never hand-edit a case tree.
 - Regenerate `caseTreeSha256` in `assets-manifest.json` after changing any file under `cases/`; the main repository lock must then be updated to the new immutable commit and manifest digest.
 
-## Acceptance conventions (asset version 2026.09.11.2)
+## Acceptance conventions (asset version 2026.09.16.1)
 
 Every `acceptance.py` shares one harness; only its configuration block and hidden checks differ.
 
@@ -34,6 +60,12 @@ Every `acceptance.py` shares one harness; only its configuration block and hidde
 L3 and L4 cases share the medium-size `opsdesk` project (about 35 modules with enforced layering);
 each case copies it and injects one defect (L3) or leaves one feature missing (L4).
 
+The tier-1 cases of `hard-v1` share the larger `kiosk` project (about 2200 lines over 48 modules in
+two enforced layers, with a command line, sample data under `data/` and runtime state under `var/`);
+each case copies it and injects one defect or leaves one feature missing. `var/` is editable in every
+kiosk case: it holds what the product writes while it runs, so exploring the command line never
+trips a hygiene check.
+
 ## Authoring workflow
 
 `cases/` is build output. Everything is authored under `authoring/`:
@@ -43,6 +75,7 @@ each case copies it and injects one defect (L3) or leaves one feature missing (L
 | `authoring/build.py` | Assembles `cases/` and refreshes `assets-manifest.json` |
 | `authoring/harness_template.py` | Shared acceptance harness (`@@CONFIG@@` / `@@HIDDEN@@` placeholders) |
 | `authoring/opsdesk/` | Canonical medium-size project copied into every L3/L4 case |
+| `authoring/kiosk/` | Canonical project copied into every tier-1 `hard-v1` case |
 | `authoring/small_agents.md` | `AGENTS.md` of the small single-module workspaces |
 | `authoring/snippets/` | Hidden-check fragments shared by several cases (layering, frozen files) |
 | `authoring/cases/<caseId>/` | `case.json`, `prompt.txt`, `base/`, `reference/`, `hidden.py` of one case |
@@ -52,11 +85,13 @@ each case copies it and injects one defect (L3) or leaves one feature missing (L
 
 One case is described by `authoring/cases/<caseId>/case.json`: level metadata, three-dimensional
 labels, variants, runner budget, the editable scope and change budget of the acceptance run, the
-ordered hidden-check names, and the optional flags `opsdesk` (copy the shared project into the
-workspace), `smallAgents` (add the small-project `AGENTS.md`), `issueFile` (also write the prompt into
-the workspace, used by L6), `snippets` and `protected`. `hidden.py` holds one `@check("name")` function
-per hidden check; `"@@TREE_SHA256:<path>@@"` is replaced at build time with the digests of the base
-files a frozen-file constraint must guard.
+ordered hidden-check names, and the optional flags `opsdesk` / `kiosk` (copy that shared project into
+the workspace), `smallAgents` (add the small-project `AGENTS.md`), `issueFile` (also write the prompt
+into the workspace, used by L6), `snippets` and `protected`. A `hard-v1` case additionally declares
+`dimension`, `tier` and `promptDerivable` (one boolean per hidden check: does the task statement
+already answer it). `hidden.py` holds one `@check("name")` function per hidden check;
+`"@@TREE_SHA256:<path>@@"` is replaced at build time with the digests of the base files a
+frozen-file constraint must guard.
 
 ```bash
 # regenerate every case tree and the manifest digest
@@ -67,14 +102,15 @@ python authoring/build.py . L3-02,L4-01
 
 # quality gates
 python authoring/gate.py cases              # NOP must fail, reference must pass
-python authoring/probes.py                  # 25 adversarial probes
+python authoring/probes.py                  # adversarial probes over both case sets
 ```
 
 The main repository runs the same case tree through its runner, which also verifies the manifest
-digest:
+digest. `--case all` expands to the members of one case set, so name the set to evaluate:
 
 ```bash
-python <main-repo>/haifa-agent-testing/haifa-agent-autonomous-delivery/tools/run_case.py --assets-dir <this-repo> --case all --mode nop --repeat 3
+python <main-repo>/haifa-agent-testing/haifa-agent-autonomous-delivery/tools/run_case.py --assets-dir <this-repo> --case all --case-set ladder-v1 --mode nop --repeat 3
+python <main-repo>/haifa-agent-testing/haifa-agent-autonomous-delivery/tools/run_case.py --assets-dir <this-repo> --case all --case-set hard-v1 --mode oracle
 ```
 
 After changing `authoring/opsdesk/` or the L3-02 base files, run `authoring/make_l3_02_log.py` so that
@@ -84,7 +120,9 @@ the committed job log keeps matching the code, then rebuild.
 
 1. Work on a branch; run `authoring/build.py .`, `authoring/gate.py cases` and `authoring/probes.py`.
 2. Bump `assetVersion` in `authoring/build.py` when the case semantics change, and the `caseVersion`
-   of every case whose prompt or acceptance semantics changed.
+   of every case whose prompt or acceptance semantics changed. Adding a case to one set changes the
+   case-tree digest without touching the other set: the cases of the untouched set stay byte-identical,
+   so a baseline recorded for it stays comparable.
 3. Open a pull request against `main`; the merge commit SHA plus the SHA-256 of `assets-manifest.json`
    are what the main repository pins in `assets.lock.json`.
 4. Update `assets.lock.json` in the main repository to that immutable revision and digest.

@@ -1,0 +1,34 @@
+{
+  "caseId": "H21-01",
+  "caseSet": "hard-v1",
+  "title": "Add a CSV export beside the JSON one",
+  "dimension": "specification-gap",
+  "tier": 1,
+  "labels": [2, 2, 4],
+  "variants": [],
+  "caseVersion": "1.0.0",
+  "runnerBudget": [480, 60, 90],
+  "kiosk": true,
+  "editable": ["kiosk/*", "var/*"],
+  "changeBudget": [1, 3],
+  "hiddenChecks": [
+    "functional.csvFormatIsOffered",
+    "functional.headerIsThePublishedFieldOrder",
+    "functional.oneLinePerCatalogueItem",
+    "boundary.missingValuesUseThePlaceholder",
+    "boundary.longNamesAreClipped",
+    "boundary.timestampsAreUtc",
+    "boundary.separatorsAndQuotesSurviveARoundTrip",
+    "regression.jsonExportIsUnchanged"
+  ],
+  "promptDerivable": {
+    "functional.csvFormatIsOffered": true,
+    "functional.headerIsThePublishedFieldOrder": true,
+    "functional.oneLinePerCatalogueItem": true,
+    "boundary.missingValuesUseThePlaceholder": false,
+    "boundary.longNamesAreClipped": false,
+    "boundary.timestampsAreUtc": false,
+    "boundary.separatorsAndQuotesSurviveARoundTrip": false,
+    "regression.jsonExportIsUnchanged": true
+  }
+}

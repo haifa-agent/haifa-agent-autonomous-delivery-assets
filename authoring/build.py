@@ -54,8 +54,43 @@ def write_text(path: Path, text: str) -> None:
     path.write_bytes(text.replace("\r\n", "\n").encode("utf-8"))
 
 
+LADDER_CASE_SET = "ladder-v1"
+HARD_CASE_SET = "hard-v1"
+
+
 def quote_title(title: str) -> str:
     return json.dumps(title) if ":" in title or title.startswith(("'", '"')) else title
+
+
+def case_set_of(meta: dict) -> str:
+    """Return the case set a case belongs to; the case id decides it."""
+    declared = meta.get("caseSet")
+    expected = HARD_CASE_SET if meta["caseId"].startswith("H") else LADDER_CASE_SET
+    if declared is not None and declared != expected:
+        raise SystemExit(f"{meta['caseId']}: caseSet {declared} does not match the case id")
+    return expected
+
+
+def check_prompt_coverage(meta: dict) -> None:
+    """A hard-ladder case must say, per hidden check, whether the prompt already answers it.
+
+    The set only works while the prompt is not a copy of the acceptance list, so the ratio is a
+    published property of every case rather than a reviewer's impression.
+    """
+    if case_set_of(meta) != HARD_CASE_SET:
+        return
+    derivable = meta.get("promptDerivable")
+    checks = meta["hiddenChecks"]
+    if not isinstance(derivable, dict) or sorted(derivable) != sorted(checks):
+        raise SystemExit(f"{meta['caseId']}: promptDerivable must name every hidden check exactly once")
+    if any(not isinstance(value, bool) for value in derivable.values()):
+        raise SystemExit(f"{meta['caseId']}: promptDerivable values must be booleans")
+    covered = sum(1 for value in derivable.values() if value)
+    if covered * 100 > len(checks) * 60:
+        raise SystemExit(
+            f"{meta['caseId']}: the prompt already answers {covered}/{len(checks)} hidden checks, "
+            "which is above the 60% ceiling of the hard case set"
+        )
 
 
 def case_yaml(meta: dict) -> str:
@@ -149,8 +184,11 @@ def build_case(source: Path, cases_root: Path) -> str:
         shutil.rmtree(target)
     base = target / "base-workspace"
     base.mkdir(parents=True)
+    check_prompt_coverage(meta)
     if meta.get("opsdesk"):
         copy_tree(GEN / "opsdesk", base)
+    if meta.get("kiosk"):
+        copy_tree(GEN / "kiosk", base)
     if meta.get("smallAgents"):
         copy_tree_file(GEN / "small_agents.md", base / "AGENTS.md")
     if (source / "base").is_dir():
@@ -189,35 +227,39 @@ def main() -> int:
     if stale:
         raise SystemExit(f"case directories without authoring source: {stale}")
     manifest_path = assets / "assets-manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if sorted(manifest["cases"]) != sorted(built):
-        raise SystemExit("manifest case list does not match the authored cases")
-    manifest["assetVersion"] = sys_asset_version()
-    manifest["caseTreeSha256"] = case_tree_sha256(cases_root)
-    lines = [
-        "{",
-        '  "schemaVersion": 1,',
-        f'  "assetVersion": "{manifest["assetVersion"]}",',
-        '  "caseRoot": "cases",',
-        f'  "caseTreeSha256": "{manifest["caseTreeSha256"]}",',
-        '  "cases": [',
-        '    "L1-01", "L1-02", "L1-03", "L1-04", "L1-05",',
-        '    "L2-01", "L2-02", "L2-03", "L2-04", "L2-05",',
-        '    "L3-01", "L3-02", "L3-03", "L3-04",',
-        '    "L4-01", "L4-02", "L4-03", "L4-04",',
-        '    "L5-01", "L5-02", "L5-03",',
-        '    "L6-01", "L6-02"',
-        "  ]",
-        "}",
-        "",
-    ]
-    write_text(manifest_path, "\n".join(lines))
-    print(f"built {len(built)} cases, caseTreeSha256={manifest['caseTreeSha256']}")
+    write_text(manifest_path, manifest_json(built, case_tree_sha256(cases_root)))
+    print(f"built {len(built)} cases, caseTreeSha256={case_tree_sha256(cases_root)}")
     return 0
 
 
+def manifest_json(built: list[str], digest: str) -> str:
+    """Render the manifest: every case, grouped into the disjoint case sets that publish it."""
+    sets: dict[str, list[str]] = {}
+    for case_id in built:
+        sets.setdefault(HARD_CASE_SET if case_id.startswith("H") else LADDER_CASE_SET, []).append(case_id)
+    lines = [
+        "{",
+        '  "schemaVersion": 2,',
+        f'  "assetVersion": "{sys_asset_version()}",',
+        '  "caseRoot": "cases",',
+        f'  "caseTreeSha256": "{digest}",',
+        '  "caseSets": {',
+    ]
+    names = sorted(sets)
+    for index, name in enumerate(names):
+        members = ", ".join(json.dumps(case_id) for case_id in sorted(sets[name]))
+        comma = "" if index == len(names) - 1 else ","
+        lines.append(f'    "{name}": [{members}]{comma}')
+    lines.append("  },")
+    members = ", ".join(json.dumps(case_id) for case_id in sorted(built))
+    lines.append(f'  "cases": [{members}]')
+    lines.append("}")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def sys_asset_version() -> str:
-    return "2026.09.11.2"
+    return "2026.09.16.1"
 
 
 if __name__ == "__main__":

@@ -1,0 +1,8 @@
+The bundled kiosk project should open on what sells, not on the alphabet.
+
+- The default catalogue listing is ordered by popularity, highest first. Items of equal popularity
+  keep the order the project already gives them among themselves.
+- `python -m kiosk list` and the listing service both follow the new default.
+- An explicitly requested order (`--order name`, `--order price`, `--order sku`) is unaffected.
+
+Do not modify the existing tests or the files in `data/`.

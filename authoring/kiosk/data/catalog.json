@@ -1,0 +1,138 @@
+{
+  "items": [
+    {
+      "sku": "K-001",
+      "name": "Almond Croissant",
+      "price_cents": 3200,
+      "popularity": 40,
+      "updated_at_millis": 1757894400000,
+      "supplier": "Boulangerie Nord",
+      "tags": [
+        "bakery"
+      ]
+    },
+    {
+      "sku": "K-002",
+      "name": "Barista Special, Extra Hot",
+      "price_cents": 4500,
+      "popularity": 95,
+      "updated_at_millis": 1757980800000,
+      "supplier": "Roasters Union",
+      "tags": [
+        "coffee"
+      ]
+    },
+    {
+      "sku": "K-003",
+      "name": "Cold Brew",
+      "price_cents": 3900,
+      "popularity": 95,
+      "updated_at_millis": 1758067200000,
+      "supplier": "Roasters Union",
+      "tags": [
+        "coffee",
+        "cold"
+      ]
+    },
+    {
+      "sku": "K-004",
+      "name": "Double Espresso",
+      "price_cents": 2800,
+      "popularity": 70,
+      "updated_at_millis": 1758153600000,
+      "supplier": null,
+      "tags": [
+        "coffee"
+      ]
+    },
+    {
+      "sku": "K-005",
+      "name": "Earl Grey Tea",
+      "price_cents": 2500,
+      "popularity": 20,
+      "updated_at_millis": 1758240000000,
+      "supplier": "Leaf and Co",
+      "tags": [
+        "tea"
+      ]
+    },
+    {
+      "sku": "K-006",
+      "name": "Flat White",
+      "price_cents": 3600,
+      "popularity": 88,
+      "updated_at_millis": 1758326400000,
+      "supplier": "Roasters Union",
+      "tags": [
+        "coffee"
+      ]
+    },
+    {
+      "sku": "K-007",
+      "name": "Ginger Lemon Infusion With Wild Honey And Mint",
+      "price_cents": 3300,
+      "popularity": 15,
+      "updated_at_millis": 1758412800000,
+      "supplier": "Leaf and Co",
+      "tags": [
+        "tea"
+      ]
+    },
+    {
+      "sku": "K-008",
+      "name": "Hazelnut Latte",
+      "price_cents": 4100,
+      "popularity": 60,
+      "updated_at_millis": 1758499200000,
+      "supplier": "Roasters Union",
+      "tags": [
+        "coffee"
+      ]
+    },
+    {
+      "sku": "K-009",
+      "name": "Iced Matcha",
+      "price_cents": 4300,
+      "popularity": 75,
+      "updated_at_millis": 1758585600000,
+      "supplier": "Leaf and Co",
+      "tags": [
+        "tea",
+        "cold"
+      ]
+    },
+    {
+      "sku": "K-010",
+      "name": "Jam \"Forest Fruits\" Tart",
+      "price_cents": 3500,
+      "popularity": 5,
+      "updated_at_millis": 0,
+      "supplier": "Boulangerie Nord",
+      "tags": [
+        "bakery"
+      ]
+    },
+    {
+      "sku": "K-011",
+      "name": "Kombucha Rhubarb",
+      "price_cents": 3700,
+      "popularity": 33,
+      "updated_at_millis": 1758672000000,
+      "supplier": "",
+      "tags": [
+        "cold"
+      ]
+    },
+    {
+      "sku": "K-012",
+      "name": "Lavender Shortbread",
+      "price_cents": 2200,
+      "popularity": 33,
+      "updated_at_millis": 1758758400000,
+      "supplier": "Boulangerie Nord",
+      "tags": [
+        "bakery"
+      ]
+    }
+  ]
+}

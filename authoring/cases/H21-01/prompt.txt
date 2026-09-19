@@ -1,0 +1,10 @@
+The bundled kiosk project must be able to export its catalogue as CSV.
+
+- `python -m kiosk export --format csv` writes the catalogue to stdout as CSV.
+- The first line is the header. The columns are the fields the project already exports, in the
+  order it already publishes them.
+- One line per catalogue item, in the order the listing hands them out.
+- `python -m kiosk formats` lists `csv` next to the formats that exist today.
+
+The JSON export keeps behaving exactly as it does now. Do not modify the existing tests or the
+files in `data/`.

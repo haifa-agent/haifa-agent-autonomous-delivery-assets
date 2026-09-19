@@ -61,6 +61,21 @@ def sub(rel, old, new):
     return m
 
 
+def remove(rel):
+    def m(ws):
+        (ws / rel).unlink()
+    return m
+
+
+def copy_from(case, source_rel, target_rel=None):
+    """Overlay one file of a published case tree (its base-workspace or its reference)."""
+    def m(ws):
+        target = ws / (target_rel or source_rel.split("/", 1)[1])
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text((CASES / case / source_rel).read_text(encoding="utf-8"), encoding="utf-8")
+    return m
+
+
 def chain(*mutations):
     def m(ws):
         for mutation in mutations:
@@ -73,6 +88,34 @@ def run_pytest(ws):
 
 
 NEW_TEST = "import unittest\n\nclass Extra(unittest.TestCase):\n    def test_extra(self):\n        self.assertTrue(True)\n"
+
+# A CSV exporter written straight from the task statement: it renders every value with str() and
+# reads the timestamp in the local time of the exporting host.
+NAIVE_CSV = '''from __future__ import annotations
+
+import csv
+import io
+from datetime import datetime
+
+FIELDS = ("sku", "name", "price", "updated", "supplier")
+
+
+def export_csv(items):
+    buffer = io.StringIO(newline="")
+    writer = csv.writer(buffer, lineterminator="\\n")
+    writer.writerow(FIELDS)
+    for item in items:
+        writer.writerow(
+            [
+                item.sku,
+                item.name,
+                f"{item.price_cents / 100:.2f}",
+                datetime.fromtimestamp(item.updated_at_millis / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                item.supplier,
+            ]
+        )
+    return buffer.getvalue()
+'''
 
 # --- good engineering behaviour must NOT be penalized
 probe("new regression test file", "L1-01", write("tests/test_extra.py", NEW_TEST), True)
@@ -116,5 +159,32 @@ probe("L5-03 calc = calculate alias", "L5-03", write("pricing.py", "def calculat
 probe("L5-03 copy-paste duplicate", "L5-03", write("pricing.py", "import warnings\n\n\ndef calculate(total, discount):\n    if discount < 0:\n        raise ValueError('negative')\n    return round(max(total - discount, 0.0), 2)\n\n\ndef calc(x, y):\n    warnings.warn('use calculate', DeprecationWarning, stacklevel=2)\n    if y < 0:\n        raise ValueError('negative')\n    return round(max(x - y, 0.0), 2)\n"), False, "constraint.singleImplementation")
 probe("L5-03 callers migrated to calculate", "L5-03", sub("checkout.py", "from pricing import calc\n", "from pricing import calculate as calc\n"), False, "constraint.callersUntouched")
 probe("L6-01 traceback on unwritable store", "L6-01", sub("cli.py", "    except OSError as error:\n        print(f\"error: cannot write the store: {error}\", file=sys.stderr)\n        return 2\n", "    finally:\n        pass\n"), False, "boundary.unwritableStoreExitsTwo")
+
+# --- hard case set: good engineering behaviour must NOT be penalized
+probe("new regression test file", "H11-01", write("tests/test_extra.py", NEW_TEST), True)
+probe("another valid csv dialect", "H21-01", sub(
+    "kiosk/app/exporters/csv_export.py", 'lineterminator="\\n"', 'lineterminator="\\r\\n"'), True)
+probe("left a scratch export in the workspace", "H21-01", write("catalogue.csv", "sku,name\n"), True)
+probe("ran the command line, which rewrote the listing cache", "H31-01", write(
+    "var/list_cache.json", '{"version": 9, "entries": {}}'), True)
+probe("added a test for the second defect", "H41-01", write("tests/test_tier_edges.py", NEW_TEST), True)
+
+# --- hard case set: shortcuts and half fixes MUST be caught
+probe("H11-01 shotgun across both decoys", "H11-01", chain(
+    sub("kiosk/core/dedupe.py", "    seen: set[str] = set()", "    seen = set()"),
+    sub("kiosk/app/ingest.py", "DEFAULT_MAX_ATTEMPTS = 3", "DEFAULT_MAX_ATTEMPTS = 4"),
+), False, "hygiene.changeBudget")
+probe("H21-01 csv written straight from the statement", "H21-01", write(
+    "kiosk/app/exporters/csv_export.py", NAIVE_CSV), False, "boundary.timestampsAreUtc")
+probe("H31-01 only the default order changed", "H31-01", copy_from(
+    "H31-01", "reference/kiosk/core/ordering.py"), False, "regression.cursorPagingHasNoGapOrOverlap", oracle=False)
+probe("H31-01 stale cache deleted instead of versioned", "H31-01", chain(
+    copy_from("H31-01", "base-workspace/kiosk/app/cache.py"),
+    remove("var/list_cache.json"),
+), False, "regression.aStaleCacheIsNotServed")
+probe("H41-01 deleted the test that was being skipped", "H41-01", remove(
+    "tests/test_discounts.py"), False, "hygiene.existingTestsUnchanged", oracle=False)
+probe("H41-01 only the missing entry point restored", "H41-01", copy_from(
+    "H41-01", "reference/kiosk/core/pricing.py"), False, "functional.aTierStartsAtItsMinimum", oracle=False)
 
 print(f"\n{sum(RESULTS)}/{len(RESULTS)} probes behaved as expected")
