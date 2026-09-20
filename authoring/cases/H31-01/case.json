@@ -4,13 +4,30 @@
   "title": "Change the default catalogue order",
   "dimension": "blast-radius",
   "tier": 1,
-  "labels": [3, 3, 4],
+  "labels": [
+    3,
+    3,
+    4
+  ],
   "variants": [],
-  "caseVersion": "1.0.0",
-  "runnerBudget": [540, 70, 110],
+  "caseVersion": "1.1.0",
+  "runnerBudget": [
+    540,
+    70,
+    110
+  ],
   "kiosk": true,
-  "editable": ["kiosk/*", "var/*"],
-  "changeBudget": [1, 4],
+  "editable": [
+    "kiosk/*",
+    "var/*"
+  ],
+  "scratchRoots": [
+    "var"
+  ],
+  "changeBudget": [
+    1,
+    4
+  ],
   "hiddenChecks": [
     "functional.defaultOrderIsPopularity",
     "boundary.equalPopularityIsSeparatedBySku",

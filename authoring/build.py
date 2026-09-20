@@ -132,6 +132,7 @@ def acceptance_script(meta: dict, hidden: str) -> str:
             f"CASE_ID = {json.dumps(meta['caseId'])}",
             f"CASE_VERSION = {json.dumps(meta['caseVersion'])}",
             f"TEST_ROOTS = {tuple(meta.get('testRoots', ['tests']))!r}",
+            f"SCRATCH_ROOTS = {tuple(meta.get('scratchRoots', []))!r}",
             f"SOURCE_SUFFIXES = {tuple(meta.get('sourceSuffixes', ['.py']))!r}",
             f"EDITABLE = {tuple(meta['editable'])!r}",
             f"PROTECTED = {tuple(meta.get('protected', []))!r}",
@@ -259,7 +260,7 @@ def manifest_json(built: list[str], digest: str) -> str:
 
 
 def sys_asset_version() -> str:
-    return "2026.09.16.1"
+    return "2026.09.20.1"
 
 
 if __name__ == "__main__":

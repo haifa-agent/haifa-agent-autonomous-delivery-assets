@@ -4,7 +4,8 @@
 Every hidden check runs in its own interpreter so that one crashing or hanging check cannot
 zero the others. Hygiene only guards what the case promises: existing tests and protected
 files stay byte-identical, changed source files stay inside the editable scope and the change
-budget. New test files and tool caches (``.pytest_cache``, ``__pycache__``...) are allowed.
+budget. New test files, tool caches (``.pytest_cache``, ``__pycache__``...) and whatever is left
+in a runtime directory the case declares as scratch are allowed.
 The final stderr line is ``DIAGNOSTICS {...}`` with the reason of every failed check.
 """
 
@@ -117,8 +118,17 @@ def is_test_path(relative: str) -> bool:
     return any(fnmatch.fnmatchcase(relative.rsplit("/", 1)[-1], pattern) for pattern in TEST_FILE_PATTERNS)
 
 
+def is_scratch_path(relative: str) -> bool:
+    """A runtime directory the case invites the agent to write into.
+
+    What lands there is state and working material, not delivered source, so a helper script left
+    behind must not spend the change budget of the actual fix.
+    """
+    return any(relative.startswith(root + "/") for root in SCRATCH_ROOTS)
+
+
 def is_source(relative: str) -> bool:
-    return relative.endswith(SOURCE_SUFFIXES) and not is_test_path(relative)
+    return relative.endswith(SOURCE_SUFFIXES) and not is_test_path(relative) and not is_scratch_path(relative)
 
 
 def is_editable(relative: str) -> bool:

@@ -40,14 +40,16 @@ Two rules keep `hard-v1` a capability probe rather than a transcription exercise
 - `cases/` is generated: edit `authoring/` and run `authoring/build.py`, never hand-edit a case tree.
 - Regenerate `caseTreeSha256` in `assets-manifest.json` after changing any file under `cases/`; the main repository lock must then be updated to the new immutable commit and manifest digest.
 
-## Acceptance conventions (asset version 2026.09.16.1)
+## Acceptance conventions (asset version 2026.09.20.1)
 
 Every `acceptance.py` shares one harness; only its configuration block and hidden checks differ.
 
 - Hygiene guards only what a case promises: existing tests and protected files (data, logs,
   contracts, frozen packages) stay byte-identical; changed source files stay inside the case's
   editable scope and change budget. New test files, tool caches (`.pytest_cache`, `__pycache__`,
-  `target/` ...) and scratch files left in the workspace are allowed.
+  `target/` ...) and scratch files left in the workspace are allowed. A case may declare
+  `scratchRoots` (the kiosk cases declare `var`): what an agent leaves in such a runtime directory
+  is working material, so even a helper `.py` script there never spends the change budget.
 - Every hidden check runs in its own interpreter with its own timeout, so one crash or hang cannot
   zero the other checks. Check names keep the `functional.` / `boundary.` / `regression.` /
   `constraint.` prefixes for attribution.
@@ -63,8 +65,9 @@ each case copies it and injects one defect (L3) or leaves one feature missing (L
 The tier-1 cases of `hard-v1` share the larger `kiosk` project (about 2200 lines over 48 modules in
 two enforced layers, with a command line, sample data under `data/` and runtime state under `var/`);
 each case copies it and injects one defect or leaves one feature missing. `var/` is editable in every
-kiosk case: it holds what the product writes while it runs, so exploring the command line never
-trips a hygiene check.
+kiosk case and declared as its scratch root: it holds what the product writes while it runs and the
+helper scripts an agent writes while it verifies itself, so neither exploring the command line nor
+leaving a probe script behind trips a hygiene check.
 
 ## Authoring workflow
 
@@ -87,7 +90,7 @@ One case is described by `authoring/cases/<caseId>/case.json`: level metadata, t
 labels, variants, runner budget, the editable scope and change budget of the acceptance run, the
 ordered hidden-check names, and the optional flags `opsdesk` / `kiosk` (copy that shared project into
 the workspace), `smallAgents` (add the small-project `AGENTS.md`), `issueFile` (also write the prompt
-into the workspace, used by L6), `snippets` and `protected`. A `hard-v1` case additionally declares
+into the workspace, used by L6), `snippets`, `protected` and `scratchRoots`. A `hard-v1` case additionally declares
 `dimension`, `tier` and `promptDerivable` (one boolean per hidden check: does the task statement
 already answer it). `hidden.py` holds one `@check("name")` function per hidden check;
 `"@@TREE_SHA256:<path>@@"` is replaced at build time with the digests of the base files a

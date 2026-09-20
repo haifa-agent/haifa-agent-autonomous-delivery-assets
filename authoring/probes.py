@@ -168,6 +168,12 @@ probe("left a scratch export in the workspace", "H21-01", write("catalogue.csv",
 probe("ran the command line, which rewrote the listing cache", "H31-01", write(
     "var/list_cache.json", '{"version": 9, "entries": {}}'), True)
 probe("added a test for the second defect", "H41-01", write("tests/test_tier_edges.py", NEW_TEST), True)
+SCRATCH_SCRIPT = "print(1)\n"
+
+# A helper script left in the runtime directory is working material, not delivered source: it must
+# not spend the change budget of the fix (H31-01 lost a correct delivery to exactly this).
+probe("left a helper script in the runtime directory", "H31-01", write("var/check_old_rule.py", SCRATCH_SCRIPT), True)
+probe("left a helper script next to the runtime state", "H11-01", write("var/probe_drain.py", SCRATCH_SCRIPT), True)
 
 # --- hard case set: shortcuts and half fixes MUST be caught
 probe("H11-01 shotgun across both decoys", "H11-01", chain(
