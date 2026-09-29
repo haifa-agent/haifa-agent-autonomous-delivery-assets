@@ -77,6 +77,7 @@ class Order:
     created_at: datetime
     lines: list[OrderLine] = field(default_factory=list)
     note: str | None = None
+    discount_code: str | None = None
 
     @property
     def subtotal(self) -> Money:
@@ -129,6 +130,8 @@ class Order:
         # Optional fields are omitted, never serialized as null (see AGENTS.md).
         if self.note:
             payload["note"] = self.note
+        if self.discount_code:
+            payload["discountCode"] = self.discount_code
         return payload
 
     @classmethod
@@ -141,4 +144,5 @@ class Order:
             created_at=created_at,
             lines=[OrderLine.from_primitives(line) for line in payload.get("lines", [])],
             note=(payload.get("note") or None),
+            discount_code=(payload.get("discountCode") or None),
         )

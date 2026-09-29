@@ -33,6 +33,12 @@ class OrderTest(unittest.TestCase):
         subject.note = "leave at the back door"
         self.assertEqual("leave at the back door", subject.to_primitives()["note"])
 
+    def test_optional_discount_code_is_omitted_when_absent(self):
+        subject = order()
+        self.assertNotIn("discountCode", subject.to_primitives())
+        subject.discount_code = "SUMMER"
+        self.assertEqual("SUMMER", subject.to_primitives()["discountCode"])
+
     def test_add_line_merges_duplicates(self):
         subject = order()
         subject.add_line(line("BEV-1001", 3, "10.00"))

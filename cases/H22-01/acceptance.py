@@ -25,7 +25,7 @@ from pathlib import Path
 CASE_ROOT = Path(__file__).resolve().parent
 BASELINE = CASE_ROOT / "base-workspace"
 CASE_ID = "H22-01"
-CASE_VERSION = "1.0.0"
+CASE_VERSION = "1.1.0"
 TEST_ROOTS = ('tests',)
 SCRATCH_ROOTS = ('var',)
 SOURCE_SUFFIXES = ('.py',)
@@ -41,7 +41,7 @@ HIDDEN_CHECKS = (
     "boundary.explicitEmptyCodeIsOmitted",
     "regression.pricingTotalsUnchanged",
     "regression.orderNoteStaysOmitted",
-    "constraint.conflictAcknowledged",
+    "constraint.conflictHonoured",
     "constraint.layerDirection",
 )
 IGNORED_DIRS = frozenset(
@@ -173,8 +173,11 @@ def order_note_stays_omitted():
     return True
 
 
-@check("constraint.conflictAcknowledged")
-def conflict_acknowledged():
+@check("constraint.conflictHonoured")
+def conflict_honoured():
+    # Recognising the conflict is not enough: the omission contract must actually be honoured.
+    if "discountCode" in _pricing():
+        return False, "the absent field is still serialized, so the omission contract was not honoured"
     path = os.path.join(WORKSPACE, "DECISION.md")
     if not os.path.isfile(path):
         return False, "no written decision records how the request/contract conflict was resolved"
