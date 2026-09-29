@@ -190,6 +190,8 @@ def build_case(source: Path, cases_root: Path) -> str:
         copy_tree(GEN / "opsdesk", base)
     if meta.get("kiosk"):
         copy_tree(GEN / "kiosk", base)
+    if meta.get("depot"):
+        copy_tree(GEN / "depot", base)
     if meta.get("smallAgents"):
         copy_tree_file(GEN / "small_agents.md", base / "AGENTS.md")
     if (source / "base").is_dir():
@@ -260,7 +262,7 @@ def manifest_json(built: list[str], digest: str) -> str:
 
 
 def sys_asset_version() -> str:
-    return "2026.09.20.1"
+    return "2026.09.29.1"
 
 
 if __name__ == "__main__":

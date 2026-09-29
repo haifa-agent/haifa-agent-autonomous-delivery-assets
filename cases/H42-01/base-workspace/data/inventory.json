@@ -1,0 +1,13 @@
+{
+  "items": [
+    {"sku": "BEV-1001", "onHand": 120, "reserved": 10, "reorderPoint": 40, "safetyStock": 20},
+    {"sku": "BEV-1002", "onHand": 35, "reserved": 0, "reorderPoint": 40, "safetyStock": 10},
+    {"sku": "BEV-1003", "onHand": 12, "reserved": 0, "reorderPoint": 15, "safetyStock": 5},
+    {"sku": "SNA-2001", "onHand": 80, "reserved": 5, "reorderPoint": 30, "safetyStock": 10},
+    {"sku": "SNA-2002", "onHand": 200, "reserved": 40, "reorderPoint": 60, "safetyStock": 20},
+    {"sku": "HOM-3001", "onHand": 60, "reserved": 0, "reorderPoint": 20, "safetyStock": 10},
+    {"sku": "HOM-3002", "onHand": 8, "reserved": 2, "reorderPoint": 10, "safetyStock": 4},
+    {"sku": "ELE-4001", "onHand": 300, "reserved": 25, "reorderPoint": 80, "safetyStock": 40},
+    {"sku": "ELE-4002", "onHand": 45, "reserved": 3, "reorderPoint": 25, "safetyStock": 10}
+  ]
+}

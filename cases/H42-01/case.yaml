@@ -1,0 +1,18 @@
+caseId: H42-01
+level: H4
+title: Two independent defects require several verify-and-fix rounds
+labels:
+  localization: 3
+  modificationSpan: 2
+  acceptance: 4
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 900
+  maxModelCalls: 90
+  maxToolCalls: 140
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

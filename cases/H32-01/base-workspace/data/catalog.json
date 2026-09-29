@@ -1,0 +1,13 @@
+{
+  "products": [
+    {"sku": "BEV-1001", "name": "Colombia Coffee Beans", "category": "beverages", "unitPrice": "12.50", "weightGrams": 500, "active": true, "tags": ["coffee", "beans"]},
+    {"sku": "BEV-1002", "name": "Yunnan Green Tea", "category": "beverages", "unitPrice": "8.00", "weightGrams": 200, "active": true, "tags": ["tea", "green"]},
+    {"sku": "BEV-1003", "name": "Instant Cocoa Mix", "category": "beverages", "unitPrice": "6.20", "weightGrams": 350, "active": false, "tags": ["cocoa"]},
+    {"sku": "SNA-2001", "name": "Roasted Almonds", "category": "snacks", "unitPrice": "9.90", "weightGrams": 250, "active": true, "tags": ["nuts"]},
+    {"sku": "SNA-2002", "name": "Sea Salt Crackers", "category": "snacks", "unitPrice": "4.50", "weightGrams": 180, "active": true, "tags": []},
+    {"sku": "HOM-3001", "name": "Cotton Kitchen Towel", "category": "home", "unitPrice": "15.00", "weightGrams": 320, "active": true, "tags": ["textile"]},
+    {"sku": "HOM-3002", "name": "Bamboo Cutting Board", "category": "home", "unitPrice": "22.00", "weightGrams": 900, "active": true, "tags": ["kitchen"]},
+    {"sku": "ELE-4001", "name": "USB-C Charging Cable", "category": "electronics", "unitPrice": "18.75", "weightGrams": 80, "active": true, "tags": ["cable"]},
+    {"sku": "ELE-4002", "name": "Wireless Mouse", "category": "electronics", "unitPrice": "35.00", "weightGrams": 140, "active": true, "tags": ["peripheral"]}
+  ]
+}

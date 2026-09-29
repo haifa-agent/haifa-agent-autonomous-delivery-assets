@@ -1,0 +1,18 @@
+caseId: H32-01
+level: H3
+title: A new filter has to propagate to every caller
+labels:
+  localization: 2
+  modificationSpan: 4
+  acceptance: 3
+variants: []
+language: PYTHON
+promptLanguage: en
+caseVersion: 1.0.0
+runnerBudget:
+  timeoutSeconds: 900
+  maxModelCalls: 90
+  maxToolCalls: 140
+acceptance:
+  entry: acceptance.py
+  workspaceArg: positional

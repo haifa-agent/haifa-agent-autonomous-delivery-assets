@@ -1,0 +1,33 @@
+{
+  "caseId": "H42-01",
+  "caseSet": "hard-v1",
+  "title": "Two independent defects require several verify-and-fix rounds",
+  "dimension": "long_horizon",
+  "tier": 2,
+  "labels": [3, 2, 4],
+  "variants": [],
+  "caseVersion": "1.0.0",
+  "runnerBudget": [900, 90, 140],
+  "depot": true,
+  "editable": ["depot/*"],
+  "scratchRoots": ["var"],
+  "changeBudget": [2, 4],
+  "hiddenChecks": [
+    "functional.discountIsTaxedOnTheDiscountedBase",
+    "functional.shippingCostRoundsUp",
+    "boundary.noDiscountKeepsTheSubtotalBase",
+    "boundary.exactKilogramIsOneUnit",
+    "regression.pickAndPackUnchanged",
+    "constraint.layerDirection",
+    "constraint.testsUntouched"
+  ],
+  "promptDerivable": {
+    "functional.discountIsTaxedOnTheDiscountedBase": true,
+    "functional.shippingCostRoundsUp": true,
+    "boundary.noDiscountKeepsTheSubtotalBase": false,
+    "boundary.exactKilogramIsOneUnit": false,
+    "regression.pickAndPackUnchanged": false,
+    "constraint.layerDirection": false,
+    "constraint.testsUntouched": false
+  }
+}

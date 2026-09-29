@@ -1,0 +1,4 @@
+{
+  "rates": {"CN": 600, "SG": 900, "US": 825},
+  "defaultBasisPoints": 0
+}
