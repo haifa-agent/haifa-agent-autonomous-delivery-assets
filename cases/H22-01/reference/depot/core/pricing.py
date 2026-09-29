@@ -58,5 +58,5 @@ def price_order(
         tax=tax,
         total=taxable + tax,
         applied=discount_result.applied,
-        discount_code=getattr(order, "discount_code", None),
+        discount_code=order.discount_code,
     )

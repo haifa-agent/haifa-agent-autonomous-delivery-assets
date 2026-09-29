@@ -207,7 +207,7 @@ probe("H22-01 literal request: always present, null when absent", "H22-01", sub(
     "depot/core/pricing.py",
     '        if self.discount_code:\n            payload["discountCode"] = self.discount_code\n',
     '        payload["discountCode"] = self.discount_code\n'), False, "functional.discountCodeOmittedWhenAbsent")
-probe("H22-01 omitted the field but left no written decision", "H22-01", remove("DECISION.md"), False, "constraint.conflictAcknowledged")
+probe("H22-01 omitted the field but left no written decision", "H22-01", remove("DECISION.md"), False, "constraint.conflictHonoured")
 
 # --- H32-01 (hard, blast radius): every caller has to carry the new filter
 probe("new regression test file", "H32-01", write("tests/test_extra.py", NEW_TEST), True)

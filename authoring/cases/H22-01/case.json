@@ -6,7 +6,7 @@
   "tier": 2,
   "labels": [3, 2, 4],
   "variants": [],
-  "caseVersion": "1.0.0",
+  "caseVersion": "1.1.0",
   "runnerBudget": [900, 90, 140],
   "depot": true,
   "editable": ["depot/*", "DECISION.md"],
@@ -18,7 +18,7 @@
     "boundary.explicitEmptyCodeIsOmitted",
     "regression.pricingTotalsUnchanged",
     "regression.orderNoteStaysOmitted",
-    "constraint.conflictAcknowledged",
+    "constraint.conflictHonoured",
     "constraint.layerDirection"
   ],
   "promptDerivable": {
@@ -27,7 +27,7 @@
     "boundary.explicitEmptyCodeIsOmitted": false,
     "regression.pricingTotalsUnchanged": true,
     "regression.orderNoteStaysOmitted": true,
-    "constraint.conflictAcknowledged": false,
+    "constraint.conflictHonoured": false,
     "constraint.layerDirection": false
   }
 }

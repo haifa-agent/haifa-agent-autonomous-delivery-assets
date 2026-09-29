@@ -262,7 +262,7 @@ def manifest_json(built: list[str], digest: str) -> str:
 
 
 def sys_asset_version() -> str:
-    return "2026.09.29.1"
+    return "2026.09.29.2"
 
 
 if __name__ == "__main__":
