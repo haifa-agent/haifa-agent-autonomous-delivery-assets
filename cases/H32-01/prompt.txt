@@ -1,0 +1,10 @@
+Feature request for the bundled depot project:
+
+> Replenishment suggestions currently list every supplier. Please let us narrow the list to one
+> supplier, from the command line as well:
+>
+>   python -m depot reorders --supplier SUP-001
+>
+> The plain `reorders` command must keep behaving exactly as it does today.
+
+Do not modify the existing tests.

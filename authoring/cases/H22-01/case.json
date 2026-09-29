@@ -1,0 +1,33 @@
+{
+  "caseId": "H22-01",
+  "caseSet": "hard-v1",
+  "title": "A requested field conflicts with the omission contract",
+  "dimension": "specification_gap",
+  "tier": 2,
+  "labels": [3, 2, 4],
+  "variants": [],
+  "caseVersion": "1.0.0",
+  "runnerBudget": [900, 90, 140],
+  "depot": true,
+  "editable": ["depot/*", "DECISION.md"],
+  "scratchRoots": ["var"],
+  "changeBudget": [1, 6],
+  "hiddenChecks": [
+    "functional.discountCodePresentWhenSet",
+    "functional.discountCodeOmittedWhenAbsent",
+    "boundary.explicitEmptyCodeIsOmitted",
+    "regression.pricingTotalsUnchanged",
+    "regression.orderNoteStaysOmitted",
+    "constraint.conflictAcknowledged",
+    "constraint.layerDirection"
+  ],
+  "promptDerivable": {
+    "functional.discountCodePresentWhenSet": true,
+    "functional.discountCodeOmittedWhenAbsent": false,
+    "boundary.explicitEmptyCodeIsOmitted": false,
+    "regression.pricingTotalsUnchanged": true,
+    "regression.orderNoteStaysOmitted": true,
+    "constraint.conflictAcknowledged": false,
+    "constraint.layerDirection": false
+  }
+}

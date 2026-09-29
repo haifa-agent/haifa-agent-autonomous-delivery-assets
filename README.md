@@ -15,7 +15,7 @@ runner evaluates exactly one of them per run (`--case-set`).
 | Case set | Cases | Purpose |
 | --- | --- | --- |
 | `ladder-v1` | `L1-01` .. `L6-02` (23) | The capability ladder: the daily regression probe |
-| `hard-v1` | `H<dimension><tier>-<seq>` | The high-difficulty probe set, one level above the ladder |
+| `hard-v1` | `H<dimension><tier>-<seq>` (4 tier-1 + 4 tier-2) | The high-difficulty probe set, one level above the ladder |
 
 A `hard-v1` case id encodes what it probes: `H12-01` is capability dimension 1 at difficulty tier 2.
 The dimensions are localization (1), specification gap (2), blast radius (3) and long-horizon
@@ -40,7 +40,7 @@ Two rules keep `hard-v1` a capability probe rather than a transcription exercise
 - `cases/` is generated: edit `authoring/` and run `authoring/build.py`, never hand-edit a case tree.
 - Regenerate `caseTreeSha256` in `assets-manifest.json` after changing any file under `cases/`; the main repository lock must then be updated to the new immutable commit and manifest digest.
 
-## Acceptance conventions (asset version 2026.09.20.1)
+## Acceptance conventions (asset version 2026.09.29.1)
 
 Every `acceptance.py` shares one harness; only its configuration block and hidden checks differ.
 
@@ -69,6 +69,11 @@ kiosk case and declared as its scratch root: it holds what the product writes wh
 helper scripts an agent writes while it verifies itself, so neither exploring the command line nor
 leaving a probe script behind trips a hygiene check.
 
+The tier-2 cases of `hard-v1` share the larger `depot` project (four enforced layers
+`api -> adapter -> store -> core`, a small Java sub-module under `java/`, sample data under `data/`
+and scratch space under `var/`); each case copies it and injects one defect or leaves one feature
+missing.
+
 ## Authoring workflow
 
 `cases/` is build output. Everything is authored under `authoring/`:
@@ -79,6 +84,7 @@ leaving a probe script behind trips a hygiene check.
 | `authoring/harness_template.py` | Shared acceptance harness (`@@CONFIG@@` / `@@HIDDEN@@` placeholders) |
 | `authoring/opsdesk/` | Canonical medium-size project copied into every L3/L4 case |
 | `authoring/kiosk/` | Canonical project copied into every tier-1 `hard-v1` case |
+| `authoring/depot/` | Canonical project copied into every tier-2 `hard-v1` case |
 | `authoring/small_agents.md` | `AGENTS.md` of the small single-module workspaces |
 | `authoring/snippets/` | Hidden-check fragments shared by several cases (layering, frozen files) |
 | `authoring/cases/<caseId>/` | `case.json`, `prompt.txt`, `base/`, `reference/`, `hidden.py` of one case |
@@ -88,7 +94,7 @@ leaving a probe script behind trips a hygiene check.
 
 One case is described by `authoring/cases/<caseId>/case.json`: level metadata, three-dimensional
 labels, variants, runner budget, the editable scope and change budget of the acceptance run, the
-ordered hidden-check names, and the optional flags `opsdesk` / `kiosk` (copy that shared project into
+ordered hidden-check names, and the optional flags `opsdesk` / `kiosk` / `depot` (copy that shared project into
 the workspace), `smallAgents` (add the small-project `AGENTS.md`), `issueFile` (also write the prompt
 into the workspace, used by L6), `snippets`, `protected` and `scratchRoots`. A `hard-v1` case additionally declares
 `dimension`, `tier` and `promptDerivable` (one boolean per hidden check: does the task statement

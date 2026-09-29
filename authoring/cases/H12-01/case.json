@@ -1,0 +1,33 @@
+{
+  "caseId": "H12-01",
+  "caseSet": "hard-v1",
+  "title": "Command-line overrides lose to the configuration file",
+  "dimension": "localization",
+  "tier": 2,
+  "labels": [5, 1, 2],
+  "variants": [],
+  "caseVersion": "1.0.0",
+  "runnerBudget": [720, 80, 120],
+  "depot": true,
+  "editable": ["depot/*"],
+  "scratchRoots": ["var"],
+  "changeBudget": [1, 3],
+  "hiddenChecks": [
+    "functional.cliOverridesFile",
+    "functional.fileOverridesDefaults",
+    "boundary.partialOverride",
+    "boundary.emptyOverrideIsNotAbsent",
+    "regression.defaultsWithoutConfig",
+    "regression.otherSubcommands",
+    "constraint.decoysUntouched"
+  ],
+  "promptDerivable": {
+    "functional.cliOverridesFile": true,
+    "functional.fileOverridesDefaults": true,
+    "boundary.partialOverride": false,
+    "boundary.emptyOverrideIsNotAbsent": false,
+    "regression.defaultsWithoutConfig": true,
+    "regression.otherSubcommands": false,
+    "constraint.decoysUntouched": false
+  }
+}

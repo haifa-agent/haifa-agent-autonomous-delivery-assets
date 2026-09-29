@@ -193,4 +193,34 @@ probe("H41-01 deleted the test that was being skipped", "H41-01", remove(
 probe("H41-01 only the missing entry point restored", "H41-01", copy_from(
     "H41-01", "reference/kiosk/core/pricing.py"), False, "functional.aTierStartsAtItsMinimum", oracle=False)
 
+# --- H12-01 (hard, localization): the decoys are frozen and the change stays minimal
+probe("new regression test file", "H12-01", write("tests/test_extra.py", NEW_TEST), True)
+probe("ran the command line, which wrote nothing outside var", "H12-01", write("var/probe_config.py", SCRATCH_SCRIPT), True)
+probe("H12-01 touched a decoy instead of the root cause", "H12-01", sub(
+    "depot/adapter/registry.py", "class HandlerRegistry:", "class HandlerRegistry:  # touched"), False, "constraint.decoysUntouched")
+probe("H12-01 edited an existing test", "H12-01", sub(
+    "tests/test_config_loader.py", "def test_defaults_only", "def test_defaults_only_renamed"), False, "hygiene.existingTestsUnchanged")
+
+# --- H22-01 (hard, specification gap): the omission contract wins over the request
+probe("new regression test file", "H22-01", write("tests/test_extra.py", NEW_TEST), True)
+probe("H22-01 literal request: always present, null when absent", "H22-01", sub(
+    "depot/core/pricing.py",
+    '        if self.discount_code:\n            payload["discountCode"] = self.discount_code\n',
+    '        payload["discountCode"] = self.discount_code\n'), False, "functional.discountCodeOmittedWhenAbsent")
+probe("H22-01 omitted the field but left no written decision", "H22-01", remove("DECISION.md"), False, "constraint.conflictAcknowledged")
+
+# --- H32-01 (hard, blast radius): every caller has to carry the new filter
+probe("new regression test file", "H32-01", write("tests/test_extra.py", NEW_TEST), True)
+probe("H32-01 filter in the domain only, command line not wired", "H32-01", copy_from(
+    "H32-01", "base-workspace/depot/api/cli.py"), False, "regression.adapterCaller")
+probe("H32-01 command-line flag without the domain filter", "H32-01", copy_from(
+    "H32-01", "base-workspace/depot/core/replenishment.py"), False, "functional.filterApplied")
+
+# --- H42-01 (hard, long horizon): converge on the real cause
+probe("new regression test file", "H42-01", write("tests/test_extra.py", NEW_TEST), True)
+probe("H42-01 deleted the red test instead of fixing the defect", "H42-01", remove(
+    "tests/test_shipping.py"), False, "hygiene.existingTestsUnchanged")
+probe("H42-01 only the pricing defect fixed", "H42-01", copy_from(
+    "H42-01", "base-workspace/depot/core/shipping.py"), False, "functional.shippingCostRoundsUp")
+
 print(f"\n{sum(RESULTS)}/{len(RESULTS)} probes behaved as expected")

@@ -1,0 +1,15 @@
+Support ticket for the bundled depot project:
+
+> Since the last release our staging jobs act on the wrong region. We run
+>
+>   python -m depot --config /etc/depot/prod.json --region SG price --order O-000101
+>
+> and prod.json already pins region to CN, so the tax we get back is the CN figure even though we
+> passed SG on the command line. The warehouse flag behaves the same way: whatever the file says
+> wins over what we pass. With no --config file everything is fine.
+>
+> We have not touched the command line in months, so something in how the settings are combined
+> must be off.
+
+No file or function is known to be involved. Find the root cause and fix it with a minimal change.
+Do not modify the existing tests or the files under `data/`.

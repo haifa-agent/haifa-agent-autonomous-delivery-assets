@@ -1,0 +1,10 @@
+Two customer reports for the bundled depot project:
+
+> Finance says the tax on discounted orders is too high: the discount is printed on the invoice, but
+> the tax still looks like it was worked out before the discount came off.
+>
+> The warehouse says light parcels are billed too cheaply: a 1.5 kg parcel is charged as if it
+> weighed 1 kg.
+
+The product suite is currently red. Get it green again and fix both reports.
+Do not modify the existing tests or the files under `data/`.

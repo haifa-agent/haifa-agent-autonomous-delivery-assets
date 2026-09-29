@@ -1,0 +1,3 @@
+{"createdAt":"2026-02-01T09:00:00Z","customer":"Acme Retail","id":"O-000101","lines":[{"quantity":24,"sku":"BEV-1001","unitPrice":"12.50"},{"quantity":60,"sku":"SNA-2002","unitPrice":"4.50"}],"status":"CONFIRMED","warehouse":"WH-CEN"}
+{"createdAt":"2026-02-02T11:30:00Z","customer":"Bright Cafe","id":"O-000102","lines":[{"quantity":12,"sku":"HOM-3002","unitPrice":"22.00"}],"status":"ALLOCATED","warehouse":"WH-EAS"}
+{"createdAt":"2026-02-03T15:45:00Z","customer":"Delta Mart","id":"O-000103","lines":[{"quantity":100,"sku":"ELE-4001","unitPrice":"18.75"},{"quantity":40,"sku":"SNA-2001","unitPrice":"9.90"}],"status":"PACKED","warehouse":"WH-CEN"}

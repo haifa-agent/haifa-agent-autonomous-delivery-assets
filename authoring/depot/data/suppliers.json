@@ -1,0 +1,8 @@
+{
+  "suppliers": [
+    {"id": "SUP-001", "name": "Andes Coffee Traders", "leadTimeDays": 14, "minimumOrderQuantity": 50, "active": true, "supplies": ["BEV-1001", "BEV-1002"]},
+    {"id": "SUP-002", "name": "Meridian Snacks", "leadTimeDays": 7, "minimumOrderQuantity": 30, "active": true, "supplies": ["SNA-2001", "SNA-2002"]},
+    {"id": "SUP-003", "name": "Northwind Home", "leadTimeDays": 21, "minimumOrderQuantity": 20, "active": true, "supplies": ["HOM-3001", "HOM-3002"]},
+    {"id": "SUP-004", "name": "Volt Electronics", "leadTimeDays": 5, "minimumOrderQuantity": 100, "active": false, "supplies": ["ELE-4001", "ELE-4002"]}
+  ]
+}

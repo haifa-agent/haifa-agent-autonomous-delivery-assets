@@ -1,0 +1,8 @@
+Feature request for the bundled depot project:
+
+> Please add a `discountCode` field to the pricing output. It has to be present on every response so
+> our downstream dashboard can render the column unconditionally: show the code when the order has
+> one, and `null` when it does not. Field name: `discountCode`.
+
+Follow the repository's own conventions for anything this request leaves open.
+Do not modify the existing tests or the files under `data/`.

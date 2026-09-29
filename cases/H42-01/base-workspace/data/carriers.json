@@ -1,0 +1,7 @@
+{
+  "carriers": [
+    {"code": "FAST", "name": "FastLane Express", "baseFee": "8.00", "perKg": "2.00", "transitDays": 1, "maxWeightGrams": 30000, "regions": ["CN", "SG"]},
+    {"code": "ECON", "name": "Economy Freight", "baseFee": "4.00", "perKg": "1.00", "transitDays": 3, "maxWeightGrams": 50000, "regions": ["CN", "SG", "US"]},
+    {"code": "SEA", "name": "SeaBridge Cargo", "baseFee": "3.00", "perKg": "0.50", "transitDays": 7, "maxWeightGrams": 200000, "regions": ["SG", "US"]}
+  ]
+}

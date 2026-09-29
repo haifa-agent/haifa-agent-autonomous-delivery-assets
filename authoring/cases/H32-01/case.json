@@ -1,0 +1,33 @@
+{
+  "caseId": "H32-01",
+  "caseSet": "hard-v1",
+  "title": "A new filter has to propagate to every caller",
+  "dimension": "blast_radius",
+  "tier": 2,
+  "labels": [2, 4, 3],
+  "variants": [],
+  "caseVersion": "1.0.0",
+  "runnerBudget": [900, 90, 140],
+  "depot": true,
+  "editable": ["depot/*"],
+  "scratchRoots": ["var"],
+  "changeBudget": [2, 5],
+  "hiddenChecks": [
+    "functional.filterApplied",
+    "functional.defaultApplied",
+    "boundary.unknownSupplier",
+    "regression.registryCaller",
+    "regression.adapterCaller",
+    "regression.otherCommandsUnchanged",
+    "constraint.layerDirection"
+  ],
+  "promptDerivable": {
+    "functional.filterApplied": true,
+    "functional.defaultApplied": true,
+    "boundary.unknownSupplier": false,
+    "regression.registryCaller": false,
+    "regression.adapterCaller": false,
+    "regression.otherCommandsUnchanged": false,
+    "constraint.layerDirection": false
+  }
+}
